@@ -1,4 +1,4 @@
-# A Collaborative Todo Sample
+# A Collaborative Todo Sample - ZenStack + Next.js
 
 This project is a collaborative todo app built with [Next.js](https://nextjs.org), [Next-Auth](nextauth.org), and [ZenStack](https://zenstack.dev).
 
