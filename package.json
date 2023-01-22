@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "next dev",
-        "build": "pnpm generate && next build",
+        "build": "npm run generate && next build",
         "start": "next start",
         "lint": "next lint",
         "db:push": "prisma db push",
@@ -13,7 +13,7 @@
         "db:reset": "prisma migrate reset",
         "db:browse": "prisma studio",
         "generate": "zenstack generate",
-        "vercel-build": "pnpm build && pnpm db:deploy"
+        "vercel-build": "npm run build && npm run db:deploy"
     },
     "dependencies": {
         "@heroicons/react": "^2.0.12",
