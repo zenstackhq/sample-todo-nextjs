@@ -1,32 +1,24 @@
-import { List, Space } from '@prisma/client';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { Space } from "@prisma/client";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 type Props = {
     space: Space;
-    list?: List;
 };
 
-export default function BreadCrumb({ space, list }: Props) {
+export default function BreadCrumb({ space }: Props) {
     const router = useRouter();
 
-    const parts = router.asPath.split('/').filter((p) => p);
+    const parts = router.asPath.split("/").filter((p) => p);
     const [base] = parts;
-    if (base !== 'space') {
+    if (base !== "space") {
         return <></>;
     }
 
     const items: Array<{ text: string; link: string }> = [];
 
-    items.push({ text: 'Home', link: '/' });
-    items.push({ text: space.name || '', link: `/space/${space.slug}` });
-
-    if (list) {
-        items.push({
-            text: list?.title || '',
-            link: `/space/${space.slug}/${list.id}`,
-        });
-    }
+    items.push({ text: "Home", link: "/" });
+    items.push({ text: space.name || "", link: `/space/${space.slug}` });
 
     return (
         <div className="text-sm text-gray-600 breadcrumbs">
