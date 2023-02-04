@@ -1,3 +1,4 @@
+/* eslint-disable */
 import type { Prisma, List } from "@prisma/client";
 import { useContext } from 'react';
 import { RequestHandlerContext, type RequestOptions } from '@zenstackhq/react/runtime';
@@ -12,7 +13,7 @@ export function useList() {
         try {
             return await request.post<Prisma.SelectSubset<T, Prisma.ListCreateArgs>, Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>>>(`${endpoint}/list/create`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -41,7 +42,7 @@ export function useList() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.ListUpdateArgs>, Prisma.ListGetPayload<T>>(`${endpoint}/list/update`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -58,7 +59,7 @@ export function useList() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.ListUpsertArgs>, Prisma.ListGetPayload<T>>(`${endpoint}/list/upsert`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -71,7 +72,7 @@ export function useList() {
         try {
             return await request.del<Prisma.ListGetPayload<T>>(`${endpoint}/list/delete`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -132,9 +133,5 @@ export function useList() {
         }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.ListGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetListGroupByPayload<T> : InputErrors>) {
         return request.get<{} extends InputErrors ? Prisma.GetListGroupByPayload<T> : InputErrors>(`${endpoint}/list/groupBy`, args, options);
     }
-
-    function count<T extends Prisma.ListCountArgs>(args: Prisma.Subset<T, Prisma.ListCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType> : number>) {
-        return request.get<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType> : number>(`${endpoint}/list/count`, args, options);
-    }
-    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
+    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
 }

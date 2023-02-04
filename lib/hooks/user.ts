@@ -1,3 +1,4 @@
+/* eslint-disable */
 import type { Prisma, User } from "@prisma/client";
 import { useContext } from 'react';
 import { RequestHandlerContext, type RequestOptions } from '@zenstackhq/react/runtime';
@@ -12,7 +13,7 @@ export function useUser() {
         try {
             return await request.post<Prisma.SelectSubset<T, Prisma.UserCreateArgs>, Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>>(`${endpoint}/user/create`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -41,7 +42,7 @@ export function useUser() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.UserUpdateArgs>, Prisma.UserGetPayload<T>>(`${endpoint}/user/update`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -58,7 +59,7 @@ export function useUser() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.UserUpsertArgs>, Prisma.UserGetPayload<T>>(`${endpoint}/user/upsert`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -71,7 +72,7 @@ export function useUser() {
         try {
             return await request.del<Prisma.UserGetPayload<T>>(`${endpoint}/user/delete`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -132,9 +133,5 @@ export function useUser() {
         }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.UserGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetUserGroupByPayload<T> : InputErrors>) {
         return request.get<{} extends InputErrors ? Prisma.GetUserGroupByPayload<T> : InputErrors>(`${endpoint}/user/groupBy`, args, options);
     }
-
-    function count<T extends Prisma.UserCountArgs>(args: Prisma.Subset<T, Prisma.UserCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.UserCountAggregateOutputType> : number>) {
-        return request.get<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.UserCountAggregateOutputType> : number>(`${endpoint}/user/count`, args, options);
-    }
-    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
+    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
 }

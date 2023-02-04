@@ -1,3 +1,4 @@
+/* eslint-disable */
 import type { Prisma, SpaceUser } from "@prisma/client";
 import { useContext } from 'react';
 import { RequestHandlerContext, type RequestOptions } from '@zenstackhq/react/runtime';
@@ -12,7 +13,7 @@ export function useSpaceUser() {
         try {
             return await request.post<Prisma.SelectSubset<T, Prisma.SpaceUserCreateArgs>, Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>>(`${endpoint}/spaceUser/create`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -41,7 +42,7 @@ export function useSpaceUser() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.SpaceUserUpdateArgs>, Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/update`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -58,7 +59,7 @@ export function useSpaceUser() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>, Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/upsert`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -71,7 +72,7 @@ export function useSpaceUser() {
         try {
             return await request.del<Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/delete`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -132,9 +133,5 @@ export function useSpaceUser() {
         }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.SpaceUserGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetSpaceUserGroupByPayload<T> : InputErrors>) {
         return request.get<{} extends InputErrors ? Prisma.GetSpaceUserGroupByPayload<T> : InputErrors>(`${endpoint}/spaceUser/groupBy`, args, options);
     }
-
-    function count<T extends Prisma.SpaceUserCountArgs>(args: Prisma.Subset<T, Prisma.SpaceUserCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.SpaceUserCountAggregateOutputType> : number>) {
-        return request.get<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.SpaceUserCountAggregateOutputType> : number>(`${endpoint}/spaceUser/count`, args, options);
-    }
-    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
+    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
 }

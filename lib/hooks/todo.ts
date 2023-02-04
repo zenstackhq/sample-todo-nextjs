@@ -1,3 +1,4 @@
+/* eslint-disable */
 import type { Prisma, Todo } from "@prisma/client";
 import { useContext } from 'react';
 import { RequestHandlerContext, type RequestOptions } from '@zenstackhq/react/runtime';
@@ -12,7 +13,7 @@ export function useTodo() {
         try {
             return await request.post<Prisma.SelectSubset<T, Prisma.TodoCreateArgs>, Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>>(`${endpoint}/todo/create`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -41,7 +42,7 @@ export function useTodo() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>, Prisma.TodoGetPayload<T>>(`${endpoint}/todo/update`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -58,7 +59,7 @@ export function useTodo() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>, Prisma.TodoGetPayload<T>>(`${endpoint}/todo/upsert`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -71,7 +72,7 @@ export function useTodo() {
         try {
             return await request.del<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/delete`, args, mutate);
         } catch (err: any) {
-            if (err.prisma && err.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -132,9 +133,5 @@ export function useTodo() {
         }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.TodoGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetTodoGroupByPayload<T> : InputErrors>) {
         return request.get<{} extends InputErrors ? Prisma.GetTodoGroupByPayload<T> : InputErrors>(`${endpoint}/todo/groupBy`, args, options);
     }
-
-    function count<T extends Prisma.TodoCountArgs>(args: Prisma.Subset<T, Prisma.TodoCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType> : number>) {
-        return request.get<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType> : number>(`${endpoint}/todo/count`, args, options);
-    }
-    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
+    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
 }
