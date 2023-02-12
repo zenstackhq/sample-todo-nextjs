@@ -30,7 +30,7 @@ See a live deployment at: https://zenstack-todo.vercel.app/.
     npm run generate
     ```
 
-1. Synchronize database schma
+1. Synchronize database schema
 
     ```bash
     npm run db:push
