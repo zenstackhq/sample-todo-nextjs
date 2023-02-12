@@ -13,7 +13,7 @@
         "db:reset": "prisma migrate reset",
         "db:browse": "prisma studio",
         "generate": "zenstack generate",
-        "vercel-build": "zenstm run build && npm run db:deploy",
+        "vercel-build": "npm run build && npm run db:deploy",
         "up": "npm install zenstack@latest @zenstackhq/runtime@latest @zenstackhq/next@latest @zenstackhq/react@latest"
     },
     "dependencies": {
