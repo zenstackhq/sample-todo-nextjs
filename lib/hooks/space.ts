@@ -13,7 +13,7 @@ export function useSpace() {
         try {
             return await request.post<Prisma.SelectSubset<T, Prisma.SpaceCreateArgs>, Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>>(`${endpoint}/space/create`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -42,7 +42,7 @@ export function useSpace() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.SpaceUpdateArgs>, Prisma.SpaceGetPayload<T>>(`${endpoint}/space/update`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -57,9 +57,9 @@ export function useSpace() {
 
     async function upsert<T extends Prisma.SpaceUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUpsertArgs>) {
         try {
-            return await request.put<Prisma.SelectSubset<T, Prisma.SpaceUpsertArgs>, Prisma.SpaceGetPayload<T>>(`${endpoint}/space/upsert`, args, mutate);
+            return await request.post<Prisma.SelectSubset<T, Prisma.SpaceUpsertArgs>, Prisma.SpaceGetPayload<T>>(`${endpoint}/space/upsert`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -72,7 +72,7 @@ export function useSpace() {
         try {
             return await request.del<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/delete`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {

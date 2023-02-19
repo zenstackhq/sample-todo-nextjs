@@ -13,7 +13,7 @@ export function useAccount() {
         try {
             return await request.post<Prisma.SelectSubset<T, Prisma.AccountCreateArgs>, Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>>(`${endpoint}/account/create`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -42,7 +42,7 @@ export function useAccount() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>, Prisma.AccountGetPayload<T>>(`${endpoint}/account/update`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -57,9 +57,9 @@ export function useAccount() {
 
     async function upsert<T extends Prisma.AccountUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>) {
         try {
-            return await request.put<Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>, Prisma.AccountGetPayload<T>>(`${endpoint}/account/upsert`, args, mutate);
+            return await request.post<Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>, Prisma.AccountGetPayload<T>>(`${endpoint}/account/upsert`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -72,7 +72,7 @@ export function useAccount() {
         try {
             return await request.del<Prisma.AccountGetPayload<T>>(`${endpoint}/account/delete`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {

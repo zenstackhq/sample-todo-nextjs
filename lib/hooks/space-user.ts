@@ -13,7 +13,7 @@ export function useSpaceUser() {
         try {
             return await request.post<Prisma.SelectSubset<T, Prisma.SpaceUserCreateArgs>, Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>>(`${endpoint}/spaceUser/create`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -42,7 +42,7 @@ export function useSpaceUser() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.SpaceUserUpdateArgs>, Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/update`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -57,9 +57,9 @@ export function useSpaceUser() {
 
     async function upsert<T extends Prisma.SpaceUserUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>) {
         try {
-            return await request.put<Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>, Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/upsert`, args, mutate);
+            return await request.post<Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>, Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/upsert`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -72,7 +72,7 @@ export function useSpaceUser() {
         try {
             return await request.del<Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/delete`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
