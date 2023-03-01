@@ -13,7 +13,7 @@ export default function Avatar({ user, size }: Props) {
     return (
         <div className="tooltip" data-tip={user.name || user.email}>
             <Image
-                src={user.image || '/avatar.jpg'}
+                src={user.image || `https://picsum.photos/seed/${user.email}/200/300`}
                 alt="avatar"
                 width={size || 32}
                 height={size || 32}
