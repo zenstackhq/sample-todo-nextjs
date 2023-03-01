@@ -22,10 +22,6 @@ export function useTodo() {
         }
     }
 
-    async function createMany<T extends Prisma.TodoCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>) {
-        return await request.post<Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>, Prisma.BatchPayload>(`${endpoint}/todo/createMany`, args, mutate);
-    }
-
     function findMany<T extends Prisma.TodoFindManyArgs>(args?: Prisma.SelectSubset<T, Prisma.TodoFindManyArgs>, options?: RequestOptions<Array<Prisma.TodoGetPayload<T>>>) {
         return request.get<Array<Prisma.TodoGetPayload<T>>>(`${endpoint}/todo/findMany`, args, options);
     }
@@ -133,5 +129,5 @@ export function useTodo() {
         }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.TodoGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetTodoGroupByPayload<T> : InputErrors>) {
         return request.get<{} extends InputErrors ? Prisma.GetTodoGroupByPayload<T> : InputErrors>(`${endpoint}/todo/groupBy`, args, options);
     }
-    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
+    return { create, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
 }

@@ -1,4 +1,3 @@
-import { Space } from '@prisma/client';
 import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
@@ -6,11 +5,10 @@ import Link from 'next/link';
 import Avatar from './Avatar';
 
 type Props = {
-    space: Space | undefined;
     user: User | undefined;
 };
 
-export default function NavBar({ user, space }: Props) {
+export default function NavBar({ user }: Props) {
     const onSignout = async () => {
         await signOut({ callbackUrl: '/signin' });
     };
@@ -21,9 +19,6 @@ export default function NavBar({ user, space }: Props) {
                 <Link href="/">
                     <a className="flex items-center">
                         <Image src="/logo.png" alt="Logo" width={32} height={32} />
-                        <div className="text-xl font-semibold ml-2 text-slate-700 hidden md:inline-block">
-                            {space?.name || 'Welcome Todo App'}
-                        </div>
                         <p className="text-xs ml-2 text-gray-500 self-end">Powered by ZenStack</p>
                     </a>
                 </Link>

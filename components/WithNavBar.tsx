@@ -1,4 +1,4 @@
-import { useCurrentSpace, useCurrentUser } from '@lib/context';
+import { useCurrentUser } from '@lib/context';
 import NavBar from './NavBar';
 
 type Props = {
@@ -7,11 +7,10 @@ type Props = {
 
 export default function WithNavBar({ children }: Props) {
     const user = useCurrentUser();
-    const space = useCurrentSpace();
 
     return (
         <>
-            <NavBar user={user} space={space} />
+            <NavBar user={user} />
             {children}
         </>
     );

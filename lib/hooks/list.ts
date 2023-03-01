@@ -22,10 +22,6 @@ export function useList() {
         }
     }
 
-    async function createMany<T extends Prisma.ListCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.ListCreateManyArgs>) {
-        return await request.post<Prisma.SelectSubset<T, Prisma.ListCreateManyArgs>, Prisma.BatchPayload>(`${endpoint}/list/createMany`, args, mutate);
-    }
-
     function findMany<T extends Prisma.ListFindManyArgs>(args?: Prisma.SelectSubset<T, Prisma.ListFindManyArgs>, options?: RequestOptions<Array<Prisma.ListGetPayload<T>>>) {
         return request.get<Array<Prisma.ListGetPayload<T>>>(`${endpoint}/list/findMany`, args, options);
     }
@@ -133,5 +129,5 @@ export function useList() {
         }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.ListGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetListGroupByPayload<T> : InputErrors>) {
         return request.get<{} extends InputErrors ? Prisma.GetListGroupByPayload<T> : InputErrors>(`${endpoint}/list/groupBy`, args, options);
     }
-    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
+    return { create, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
 }

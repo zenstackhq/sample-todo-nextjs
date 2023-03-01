@@ -30,13 +30,11 @@ export default function TodoList({ value, deleted }: Props) {
 
     return (
         <div className="card w-80 bg-base-100 shadow-xl cursor-pointer hover:bg-gray-50">
-            <Link href={`${router.asPath}/${value.id}`}>
+            <Link href={`${router.asPath}list/${value.id}`}>
                 <a>
                     <figure>
                         <Image
-                            src={`https://picsum.photos/300/200?r=${customAlphabet(
-                                '0123456789'
-                            )(4)}`}
+                            src={`https://picsum.photos/300/200?r=${customAlphabet('0123456789')(4)}`}
                             width={320}
                             height={200}
                             alt="Cover"
@@ -47,9 +45,7 @@ export default function TodoList({ value, deleted }: Props) {
             <div className="card-body">
                 <Link href={`${router.asPath}/${value.id}`}>
                     <a>
-                        <h2 className="card-title line-clamp-1">
-                            {value.title || 'Missing Title'}
-                        </h2>
+                        <h2 className="card-title line-clamp-1">{value.title || 'Missing Title'}</h2>
                     </a>
                 </Link>
                 <div className="card-actions flex w-full justify-between">
