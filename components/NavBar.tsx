@@ -19,7 +19,7 @@ export default function NavBar({ user }: Props) {
                 <Link href="/">
                     <a className="flex items-center">
                         <Image src="/logo.png" alt="Logo" width={32} height={32} />
-                        <p className="text-xs ml-2 text-gray-500 self-end">{user?.email}</p>
+                        <p className="text ml-2 text-gray-500 self-end">{user?.email}</p>
                     </a>
                 </Link>
             </div>
