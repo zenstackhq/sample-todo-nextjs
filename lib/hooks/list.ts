@@ -13,7 +13,7 @@ export function useList() {
         try {
             return await request.post<Prisma.SelectSubset<T, Prisma.ListCreateArgs>, Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>>>(`${endpoint}/list/create`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -42,7 +42,7 @@ export function useList() {
         try {
             return await request.put<Prisma.SelectSubset<T, Prisma.ListUpdateArgs>, Prisma.ListGetPayload<T>>(`${endpoint}/list/update`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -59,7 +59,7 @@ export function useList() {
         try {
             return await request.post<Prisma.SelectSubset<T, Prisma.ListUpsertArgs>, Prisma.ListGetPayload<T>>(`${endpoint}/list/upsert`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
@@ -72,7 +72,7 @@ export function useList() {
         try {
             return await request.del<Prisma.ListGetPayload<T>>(`${endpoint}/list/delete`, args, mutate);
         } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.extra === 'RESULT_NOT_READABLE') {
+            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
                 return undefined;
             } else {
