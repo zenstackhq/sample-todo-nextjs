@@ -1,8 +1,9 @@
 /* eslint-disable */
 import type { Prisma, Space } from "@prisma/client";
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions } from '@zenstackhq/react/runtime';
-import * as request from '@zenstackhq/react/runtime';
+import { RequestHandlerContext } from '@zenstackhq/react/runtime';
+import { type RequestOptions } from '@zenstackhq/react/runtime/swr';
+import * as request from '@zenstackhq/react/runtime/swr';
 
 export function useSpace() {
     const { endpoint } = useContext(RequestHandlerContext);
@@ -68,7 +69,7 @@ export function useSpace() {
         }
     }
 
-    async function del<T extends Prisma.SpaceDeleteArgs>(args?: Prisma.SelectSubset<T, Prisma.SpaceDeleteArgs>) {
+    async function del<T extends Prisma.SpaceDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceDeleteArgs>) {
         try {
             return await request.del<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/delete`, args, mutate);
         } catch (err: any) {
@@ -133,5 +134,9 @@ export function useSpace() {
         }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.SpaceGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetSpaceGroupByPayload<T> : InputErrors>) {
         return request.get<{} extends InputErrors ? Prisma.GetSpaceGroupByPayload<T> : InputErrors>(`${endpoint}/space/groupBy`, args, options);
     }
-    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
+
+    function count<T extends Prisma.SpaceCountArgs>(args: Prisma.Subset<T, Prisma.SpaceCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType> : number>) {
+        return request.get<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType> : number>(`${endpoint}/space/count`, args, options);
+    }
+    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
 }

@@ -1,8 +1,9 @@
 /* eslint-disable */
 import type { Prisma, User } from "@prisma/client";
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions } from '@zenstackhq/react/runtime';
-import * as request from '@zenstackhq/react/runtime';
+import { RequestHandlerContext } from '@zenstackhq/react/runtime';
+import { type RequestOptions } from '@zenstackhq/react/runtime/swr';
+import * as request from '@zenstackhq/react/runtime/swr';
 
 export function useUser() {
     const { endpoint } = useContext(RequestHandlerContext);
@@ -68,7 +69,7 @@ export function useUser() {
         }
     }
 
-    async function del<T extends Prisma.UserDeleteArgs>(args?: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>) {
+    async function del<T extends Prisma.UserDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>) {
         try {
             return await request.del<Prisma.UserGetPayload<T>>(`${endpoint}/user/delete`, args, mutate);
         } catch (err: any) {
@@ -133,5 +134,9 @@ export function useUser() {
         }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.UserGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetUserGroupByPayload<T> : InputErrors>) {
         return request.get<{} extends InputErrors ? Prisma.GetUserGroupByPayload<T> : InputErrors>(`${endpoint}/user/groupBy`, args, options);
     }
-    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
+
+    function count<T extends Prisma.UserCountArgs>(args: Prisma.Subset<T, Prisma.UserCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.UserCountAggregateOutputType> : number>) {
+        return request.get<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.UserCountAggregateOutputType> : number>(`${endpoint}/user/count`, args, options);
+    }
+    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
 }
