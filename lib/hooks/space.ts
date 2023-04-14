@@ -131,8 +131,26 @@ export function useSpace() {
             [P in OrderFields]: P extends ByFields
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.SpaceGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetSpaceGroupByPayload<T> : InputErrors>) {
-        return request.get<{} extends InputErrors ? Prisma.GetSpaceGroupByPayload<T> : InputErrors>(`${endpoint}/space/groupBy`, args, options);
+        }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.SpaceGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ?
+            Array<Prisma.PickArray<Prisma.SpaceGroupByOutputType, T['by']> &
+                {
+                    [P in ((keyof T) & (keyof Prisma.SpaceGroupByOutputType))]: P extends '_count'
+                    ? T[P] extends boolean
+                    ? number
+                    : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
+                    : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
+                }
+            > : InputErrors>) {
+        return request.get<{} extends InputErrors ?
+            Array<Prisma.PickArray<Prisma.SpaceGroupByOutputType, T['by']> &
+                {
+                    [P in ((keyof T) & (keyof Prisma.SpaceGroupByOutputType))]: P extends '_count'
+                    ? T[P] extends boolean
+                    ? number
+                    : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
+                    : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
+                }
+            > : InputErrors>(`${endpoint}/space/groupBy`, args, options);
     }
 
     function count<T extends Prisma.SpaceCountArgs>(args: Prisma.Subset<T, Prisma.SpaceCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType> : number>) {

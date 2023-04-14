@@ -131,8 +131,26 @@ export function useAccount() {
             [P in OrderFields]: P extends ByFields
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.AccountGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetAccountGroupByPayload<T> : InputErrors>) {
-        return request.get<{} extends InputErrors ? Prisma.GetAccountGroupByPayload<T> : InputErrors>(`${endpoint}/account/groupBy`, args, options);
+        }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.AccountGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ?
+            Array<Prisma.PickArray<Prisma.AccountGroupByOutputType, T['by']> &
+                {
+                    [P in ((keyof T) & (keyof Prisma.AccountGroupByOutputType))]: P extends '_count'
+                    ? T[P] extends boolean
+                    ? number
+                    : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>
+                    : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>
+                }
+            > : InputErrors>) {
+        return request.get<{} extends InputErrors ?
+            Array<Prisma.PickArray<Prisma.AccountGroupByOutputType, T['by']> &
+                {
+                    [P in ((keyof T) & (keyof Prisma.AccountGroupByOutputType))]: P extends '_count'
+                    ? T[P] extends boolean
+                    ? number
+                    : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>
+                    : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>
+                }
+            > : InputErrors>(`${endpoint}/account/groupBy`, args, options);
     }
 
     function count<T extends Prisma.AccountCountArgs>(args: Prisma.Subset<T, Prisma.AccountCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.AccountCountAggregateOutputType> : number>) {

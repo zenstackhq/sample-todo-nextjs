@@ -131,8 +131,26 @@ export function useList() {
             [P in OrderFields]: P extends ByFields
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.ListGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetListGroupByPayload<T> : InputErrors>) {
-        return request.get<{} extends InputErrors ? Prisma.GetListGroupByPayload<T> : InputErrors>(`${endpoint}/list/groupBy`, args, options);
+        }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.ListGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ?
+            Array<Prisma.PickArray<Prisma.ListGroupByOutputType, T['by']> &
+                {
+                    [P in ((keyof T) & (keyof Prisma.ListGroupByOutputType))]: P extends '_count'
+                    ? T[P] extends boolean
+                    ? number
+                    : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
+                    : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
+                }
+            > : InputErrors>) {
+        return request.get<{} extends InputErrors ?
+            Array<Prisma.PickArray<Prisma.ListGroupByOutputType, T['by']> &
+                {
+                    [P in ((keyof T) & (keyof Prisma.ListGroupByOutputType))]: P extends '_count'
+                    ? T[P] extends boolean
+                    ? number
+                    : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
+                    : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
+                }
+            > : InputErrors>(`${endpoint}/list/groupBy`, args, options);
     }
 
     function count<T extends Prisma.ListCountArgs>(args: Prisma.Subset<T, Prisma.ListCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType> : number>) {
