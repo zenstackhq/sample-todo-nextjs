@@ -1,18 +1,24 @@
 # A Collaborative Todo Sample - ZenStack + Next.js
 
-This project is a collaborative todo app built with [Next.js](https://nextjs.org), [Next-Auth](nextauth.org), and [ZenStack](https://zenstack.dev).
+This project is a collaborative Todo app built with [Next.js](https://nextjs.org), [Next-Auth](nextauth.org), and [ZenStack](https://zenstack.dev).
 
 In this fictitious app, users can be invited to workspaces where they can collaborate on todos. Public todo lists are visible to all members in the workspace.
 
 See a live deployment at: https://zenstack-todo.vercel.app/.
 
-## Features:
+## Features
 
 -   User signup/signin
 -   Creating workspaces and inviting members
 -   Data segregation and permission control
 
-## Running the sample:
+## Implementation
+
+-   Data model is located at `/schema.zmodel`.
+-   An automatic CRUD API is mounted at `/api/model` by `pages/api/model/[...path].ts`.
+-   [SWR](https://swr.vercel.app/) CRUD hooks are generated under `lib/hooks` folder.
+
+## Running the sample
 
 1. Setup a new PostgreSQL database
 

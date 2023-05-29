@@ -1,5 +1,5 @@
 import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useList } from '@lib/hooks';
+import { useMutateList } from '@lib/hooks';
 import { List } from '@prisma/client';
 import { customAlphabet } from 'nanoid';
 import { User } from 'next-auth';
@@ -17,11 +17,11 @@ type Props = {
 export default function TodoList({ value, deleted }: Props) {
     const router = useRouter();
 
-    const { del } = useList();
+    const { deleteList } = useMutateList();
 
-    const deleteList = async () => {
+    const onDeleteList = async () => {
         if (confirm('Are you sure to delete this list?')) {
-            await del({ where: { id: value.id } });
+            await deleteList({ where: { id: value.id } });
             if (deleted) {
                 deleted(value);
             }
@@ -34,9 +34,7 @@ export default function TodoList({ value, deleted }: Props) {
                 <a>
                     <figure>
                         <Image
-                            src={`https://picsum.photos/300/200?r=${customAlphabet(
-                                '0123456789'
-                            )(4)}`}
+                            src={`https://picsum.photos/300/200?r=${customAlphabet('0123456789')(4)}`}
                             width={320}
                             height={200}
                             alt="Cover"
@@ -47,9 +45,7 @@ export default function TodoList({ value, deleted }: Props) {
             <div className="card-body">
                 <Link href={`${router.asPath}/${value.id}`}>
                     <a>
-                        <h2 className="card-title line-clamp-1">
-                            {value.title || 'Missing Title'}
-                        </h2>
+                        <h2 className="card-title line-clamp-1">{value.title || 'Missing Title'}</h2>
                     </a>
                 </Link>
                 <div className="card-actions flex w-full justify-between">
@@ -66,7 +62,7 @@ export default function TodoList({ value, deleted }: Props) {
                         <TrashIcon
                             className="w-4 h-4 text-gray-500 cursor-pointer"
                             onClick={() => {
-                                deleteList();
+                                onDeleteList();
                             }}
                         />
                     </div>

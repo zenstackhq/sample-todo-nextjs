@@ -1,15 +1,10 @@
-import {
-    SpaceContext,
-    useCurrentSpace,
-    useCurrentUser,
-    UserContext,
-} from '@lib/context';
-import { Provider as ZenStackHooksProvider } from '@zenstackhq/react/runtime';
+import { SpaceContext, useCurrentSpace, useCurrentUser, UserContext } from '@lib/context';
 import AuthGuard from 'components/AuthGuard';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Provider as ZenStackHooksProvider } from '../lib/hooks';
 import '../styles/globals.css';
 
 function AppContent(props: { children: JSX.Element | JSX.Element[] }) {
@@ -20,9 +15,7 @@ function AppContent(props: { children: JSX.Element | JSX.Element[] }) {
         <AuthGuard>
             <UserContext.Provider value={user}>
                 <SpaceContext.Provider value={space}>
-                    <div className="h-screen flex flex-col">
-                        {props.children}
-                    </div>
+                    <div className="h-screen flex flex-col">{props.children}</div>
                 </SpaceContext.Provider>
             </UserContext.Provider>
         </AuthGuard>
@@ -36,11 +29,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
                 <AppContent>
                     <div className="flex-grow h-100">
                         <Component {...pageProps} />
-                        <ToastContainer
-                            position="top-center"
-                            autoClose={2000}
-                            hideProgressBar={true}
-                        />
+                        <ToastContainer position="top-center" autoClose={2000} hideProgressBar={true} />
                     </div>
                 </AppContent>
             </ZenStackHooksProvider>
