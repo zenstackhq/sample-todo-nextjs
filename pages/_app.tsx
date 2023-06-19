@@ -1,4 +1,5 @@
 import { SpaceContext, useCurrentSpace, useCurrentUser, UserContext } from '@lib/context';
+import { Analytics } from '@vercel/analytics/react';
 import AuthGuard from 'components/AuthGuard';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
@@ -24,16 +25,19 @@ function AppContent(props: { children: JSX.Element | JSX.Element[] }) {
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     return (
-        <SessionProvider session={session}>
-            <ZenStackHooksProvider value={{ endpoint: '/api/model' }}>
-                <AppContent>
-                    <div className="flex-grow h-100">
-                        <Component {...pageProps} />
-                        <ToastContainer position="top-center" autoClose={2000} hideProgressBar={true} />
-                    </div>
-                </AppContent>
-            </ZenStackHooksProvider>
-        </SessionProvider>
+        <>
+            <SessionProvider session={session}>
+                <ZenStackHooksProvider value={{ endpoint: '/api/model' }}>
+                    <AppContent>
+                        <div className="flex-grow h-100">
+                            <Component {...pageProps} />
+                            <ToastContainer position="top-center" autoClose={2000} hideProgressBar={true} />
+                        </div>
+                    </AppContent>
+                </ZenStackHooksProvider>
+            </SessionProvider>
+            <Analytics />
+        </>
     );
 }
 
