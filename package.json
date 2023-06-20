@@ -16,7 +16,7 @@
         "vercel-build": "npm run build && npm run db:deploy",
         "package-clean": "npm rm zenstack @zenstackhq/runtime @zenstackhq/server @zenstackhq/swr",
         "up": "npm run package-clean && npm install -D --save-exact zenstack@latest @zenstackhq/swr@latest && npm install --save-exact @zenstackhq/runtime@latest @zenstackhq/server@latest",
-        "up-preview": "npm run package-clean && npm install --registry https://packagecloud.io/ymc9/zenstack-preview/npm -D zenstack@latest @zenstackhq/swr@latest && npm install --registry https://packagecloud.io/ymc9/zenstack-preview/npm @zenstackhq/runtime@latest @zenstackhq/server@latest"
+        "up-preview": "npm run package-clean && npm install --registry http://localhost:4873 -D zenstack@latest @zenstackhq/swr@latest && npm install --registry http://localhost:4873 @zenstackhq/runtime@latest @zenstackhq/server@latest"
     },
     "dependencies": {
         "@heroicons/react": "^2.0.12",
@@ -24,8 +24,8 @@
         "@prisma/client": "^4.14.1",
         "@tanstack/react-query": "^4.20.2",
         "@vercel/analytics": "^1.0.1",
-        "@zenstackhq/runtime": "1.0.0-beta.1",
-        "@zenstackhq/server": "1.0.0-beta.1",
+        "@zenstackhq/runtime": "1.0.0-beta.2",
+        "@zenstackhq/server": "1.0.0-beta.2",
         "babel-plugin-superjson-next": "^0.4.5",
         "bcryptjs": "^2.4.3",
         "daisyui": "^2.31.0",
@@ -45,7 +45,7 @@
         "@types/node": "^14.17.3",
         "@types/react": "18.0.21",
         "@types/react-dom": "18.0.6",
-        "@zenstackhq/swr": "1.0.0-beta.1",
+        "@zenstackhq/swr": "1.0.0-beta.2",
         "autoprefixer": "^10.4.12",
         "eslint": "^7.19.0",
         "eslint-config-next": "12.3.1",
@@ -53,6 +53,6 @@
         "prisma": "^4.14.1",
         "tailwindcss": "^3.1.8",
         "typescript": "^4.6.2",
-        "zenstack": "1.0.0-beta.1"
+        "zenstack": "1.0.0-beta.2"
     }
 }

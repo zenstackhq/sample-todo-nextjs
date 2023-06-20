@@ -146,7 +146,7 @@ export function useFindUniqueSpaceUser<T extends Prisma.SpaceUserFindUniqueArgs>
     options?: RequestOptions<Prisma.SpaceUserGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/findMany`, args, options);
+    return request.get<Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/findUnique`, args, options);
 }
 
 export function useFindFirstSpaceUser<T extends Prisma.SpaceUserFindFirstArgs>(
@@ -154,7 +154,7 @@ export function useFindFirstSpaceUser<T extends Prisma.SpaceUserFindFirstArgs>(
     options?: RequestOptions<Prisma.SpaceUserGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/findMany`, args, options);
+    return request.get<Prisma.SpaceUserGetPayload<T>>(`${endpoint}/spaceUser/findFirst`, args, options);
 }
 
 export function useAggregateSpaceUser<T extends Prisma.SpaceUserAggregateArgs>(
@@ -162,7 +162,7 @@ export function useAggregateSpaceUser<T extends Prisma.SpaceUserAggregateArgs>(
     options?: RequestOptions<Prisma.GetSpaceUserAggregateType<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetSpaceUserAggregateType<T>>(`${endpoint}/spaceUser/findMany`, args, options);
+    return request.get<Prisma.GetSpaceUserAggregateType<T>>(`${endpoint}/spaceUser/aggregate`, args, options);
 }
 
 export function useGroupBySpaceUser<
@@ -243,7 +243,7 @@ export function useGroupBySpaceUser<
                   }
               >
             : InputErrors
-    >(`${endpoint}/spaceUser/findMany`, args, options);
+    >(`${endpoint}/spaceUser/groupBy`, args, options);
 }
 
 export function useCountSpaceUser<T extends Prisma.SpaceUserCountArgs>(
@@ -263,5 +263,5 @@ export function useCountSpaceUser<T extends Prisma.SpaceUserCountArgs>(
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.SpaceUserCountAggregateOutputType>
             : number
-    >(`${endpoint}/spaceUser/findMany`, args, options);
+    >(`${endpoint}/spaceUser/count`, args, options);
 }

@@ -130,7 +130,7 @@ export function useFindUniqueTodo<T extends Prisma.TodoFindUniqueArgs>(
     options?: RequestOptions<Prisma.TodoGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findMany`, args, options);
+    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findUnique`, args, options);
 }
 
 export function useFindFirstTodo<T extends Prisma.TodoFindFirstArgs>(
@@ -138,7 +138,7 @@ export function useFindFirstTodo<T extends Prisma.TodoFindFirstArgs>(
     options?: RequestOptions<Prisma.TodoGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findMany`, args, options);
+    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findFirst`, args, options);
 }
 
 export function useAggregateTodo<T extends Prisma.TodoAggregateArgs>(
@@ -146,7 +146,7 @@ export function useAggregateTodo<T extends Prisma.TodoAggregateArgs>(
     options?: RequestOptions<Prisma.GetTodoAggregateType<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetTodoAggregateType<T>>(`${endpoint}/todo/findMany`, args, options);
+    return request.get<Prisma.GetTodoAggregateType<T>>(`${endpoint}/todo/aggregate`, args, options);
 }
 
 export function useGroupByTodo<
@@ -227,7 +227,7 @@ export function useGroupByTodo<
                   }
               >
             : InputErrors
-    >(`${endpoint}/todo/findMany`, args, options);
+    >(`${endpoint}/todo/groupBy`, args, options);
 }
 
 export function useCountTodo<T extends Prisma.TodoCountArgs>(
@@ -247,5 +247,5 @@ export function useCountTodo<T extends Prisma.TodoCountArgs>(
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType>
             : number
-    >(`${endpoint}/todo/findMany`, args, options);
+    >(`${endpoint}/todo/count`, args, options);
 }

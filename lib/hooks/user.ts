@@ -130,7 +130,7 @@ export function useFindUniqueUser<T extends Prisma.UserFindUniqueArgs>(
     options?: RequestOptions<Prisma.UserGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.UserGetPayload<T>>(`${endpoint}/user/findMany`, args, options);
+    return request.get<Prisma.UserGetPayload<T>>(`${endpoint}/user/findUnique`, args, options);
 }
 
 export function useFindFirstUser<T extends Prisma.UserFindFirstArgs>(
@@ -138,7 +138,7 @@ export function useFindFirstUser<T extends Prisma.UserFindFirstArgs>(
     options?: RequestOptions<Prisma.UserGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.UserGetPayload<T>>(`${endpoint}/user/findMany`, args, options);
+    return request.get<Prisma.UserGetPayload<T>>(`${endpoint}/user/findFirst`, args, options);
 }
 
 export function useAggregateUser<T extends Prisma.UserAggregateArgs>(
@@ -146,7 +146,7 @@ export function useAggregateUser<T extends Prisma.UserAggregateArgs>(
     options?: RequestOptions<Prisma.GetUserAggregateType<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetUserAggregateType<T>>(`${endpoint}/user/findMany`, args, options);
+    return request.get<Prisma.GetUserAggregateType<T>>(`${endpoint}/user/aggregate`, args, options);
 }
 
 export function useGroupByUser<
@@ -227,7 +227,7 @@ export function useGroupByUser<
                   }
               >
             : InputErrors
-    >(`${endpoint}/user/findMany`, args, options);
+    >(`${endpoint}/user/groupBy`, args, options);
 }
 
 export function useCountUser<T extends Prisma.UserCountArgs>(
@@ -247,5 +247,5 @@ export function useCountUser<T extends Prisma.UserCountArgs>(
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.UserCountAggregateOutputType>
             : number
-    >(`${endpoint}/user/findMany`, args, options);
+    >(`${endpoint}/user/count`, args, options);
 }

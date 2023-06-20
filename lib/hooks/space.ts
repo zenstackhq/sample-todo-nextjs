@@ -130,7 +130,7 @@ export function useFindUniqueSpace<T extends Prisma.SpaceFindUniqueArgs>(
     options?: RequestOptions<Prisma.SpaceGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findMany`, args, options);
+    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findUnique`, args, options);
 }
 
 export function useFindFirstSpace<T extends Prisma.SpaceFindFirstArgs>(
@@ -138,7 +138,7 @@ export function useFindFirstSpace<T extends Prisma.SpaceFindFirstArgs>(
     options?: RequestOptions<Prisma.SpaceGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findMany`, args, options);
+    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findFirst`, args, options);
 }
 
 export function useAggregateSpace<T extends Prisma.SpaceAggregateArgs>(
@@ -146,7 +146,7 @@ export function useAggregateSpace<T extends Prisma.SpaceAggregateArgs>(
     options?: RequestOptions<Prisma.GetSpaceAggregateType<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetSpaceAggregateType<T>>(`${endpoint}/space/findMany`, args, options);
+    return request.get<Prisma.GetSpaceAggregateType<T>>(`${endpoint}/space/aggregate`, args, options);
 }
 
 export function useGroupBySpace<
@@ -227,7 +227,7 @@ export function useGroupBySpace<
                   }
               >
             : InputErrors
-    >(`${endpoint}/space/findMany`, args, options);
+    >(`${endpoint}/space/groupBy`, args, options);
 }
 
 export function useCountSpace<T extends Prisma.SpaceCountArgs>(
@@ -247,5 +247,5 @@ export function useCountSpace<T extends Prisma.SpaceCountArgs>(
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType>
             : number
-    >(`${endpoint}/space/findMany`, args, options);
+    >(`${endpoint}/space/count`, args, options);
 }
