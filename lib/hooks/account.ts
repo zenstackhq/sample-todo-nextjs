@@ -5,7 +5,7 @@ import { RequestHandlerContext, type RequestOptions } from './_helper';
 import * as request from './_helper';
 
 export function useMutateAccount() {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     const prefixesToMutate = [
         `${endpoint}/account/find`,
         `${endpoint}/account/aggregate`,
@@ -22,6 +22,7 @@ export function useMutateAccount() {
                 `${endpoint}/account/create`,
                 args,
                 mutate,
+                fetch,
             );
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
@@ -37,7 +38,7 @@ export function useMutateAccount() {
         args: Prisma.SelectSubset<T, Prisma.AccountCreateManyArgs>,
     ) {
         try {
-            return await request.post<Prisma.BatchPayload>(`${endpoint}/account/createMany`, args, mutate);
+            return await request.post<Prisma.BatchPayload>(`${endpoint}/account/createMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -52,7 +53,7 @@ export function useMutateAccount() {
         args: Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>,
     ) {
         try {
-            return await request.put<Prisma.AccountGetPayload<T>>(`${endpoint}/account/update`, args, mutate);
+            return await request.put<Prisma.AccountGetPayload<T>>(`${endpoint}/account/update`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -67,7 +68,7 @@ export function useMutateAccount() {
         args: Prisma.SelectSubset<T, Prisma.AccountUpdateManyArgs>,
     ) {
         try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/account/updateMany`, args, mutate);
+            return await request.put<Prisma.BatchPayload>(`${endpoint}/account/updateMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -82,7 +83,7 @@ export function useMutateAccount() {
         args: Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>,
     ) {
         try {
-            return await request.post<Prisma.AccountGetPayload<T>>(`${endpoint}/account/upsert`, args, mutate);
+            return await request.post<Prisma.AccountGetPayload<T>>(`${endpoint}/account/upsert`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -97,7 +98,7 @@ export function useMutateAccount() {
         args: Prisma.SelectSubset<T, Prisma.AccountDeleteArgs>,
     ) {
         try {
-            return await request.del<Prisma.AccountGetPayload<T>>(`${endpoint}/account/delete`, args, mutate);
+            return await request.del<Prisma.AccountGetPayload<T>>(`${endpoint}/account/delete`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -112,7 +113,7 @@ export function useMutateAccount() {
         args: Prisma.SelectSubset<T, Prisma.AccountDeleteManyArgs>,
     ) {
         try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/account/deleteMany`, args, mutate);
+            return await request.del<Prisma.BatchPayload>(`${endpoint}/account/deleteMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -137,32 +138,32 @@ export function useFindManyAccount<T extends Prisma.AccountFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindManyArgs>,
     options?: RequestOptions<Array<Prisma.AccountGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.AccountGetPayload<T>>>(`${endpoint}/account/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Array<Prisma.AccountGetPayload<T>>>(`${endpoint}/account/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueAccount<T extends Prisma.AccountFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindUniqueArgs>,
     options?: RequestOptions<Prisma.AccountGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstAccount<T extends Prisma.AccountFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindFirstArgs>,
     options?: RequestOptions<Prisma.AccountGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findFirst`, args, options, fetch);
 }
 
 export function useAggregateAccount<T extends Prisma.AccountAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.AccountAggregateArgs>,
     options?: RequestOptions<Prisma.GetAccountAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetAccountAggregateType<T>>(`${endpoint}/account/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.GetAccountAggregateType<T>>(`${endpoint}/account/aggregate`, args, options, fetch);
 }
 
 export function useGroupByAccount<
@@ -230,7 +231,7 @@ export function useGroupByAccount<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         {} extends InputErrors
             ? Array<
@@ -243,7 +244,7 @@ export function useGroupByAccount<
                   }
               >
             : InputErrors
-    >(`${endpoint}/account/groupBy`, args, options);
+    >(`${endpoint}/account/groupBy`, args, options, fetch);
 }
 
 export function useCountAccount<T extends Prisma.AccountCountArgs>(
@@ -256,12 +257,12 @@ export function useCountAccount<T extends Prisma.AccountCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.AccountCountAggregateOutputType>
             : number
-    >(`${endpoint}/account/count`, args, options);
+    >(`${endpoint}/account/count`, args, options, fetch);
 }

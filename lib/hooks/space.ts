@@ -5,7 +5,7 @@ import { RequestHandlerContext, type RequestOptions } from './_helper';
 import * as request from './_helper';
 
 export function useMutateSpace() {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     const prefixesToMutate = [
         `${endpoint}/space/find`,
         `${endpoint}/space/aggregate`,
@@ -20,6 +20,7 @@ export function useMutateSpace() {
                 `${endpoint}/space/create`,
                 args,
                 mutate,
+                fetch,
             );
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
@@ -35,7 +36,7 @@ export function useMutateSpace() {
         args: Prisma.SelectSubset<T, Prisma.SpaceCreateManyArgs>,
     ) {
         try {
-            return await request.post<Prisma.BatchPayload>(`${endpoint}/space/createMany`, args, mutate);
+            return await request.post<Prisma.BatchPayload>(`${endpoint}/space/createMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -48,7 +49,7 @@ export function useMutateSpace() {
 
     async function updateSpace<T extends Prisma.SpaceUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUpdateArgs>) {
         try {
-            return await request.put<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/update`, args, mutate);
+            return await request.put<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/update`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -63,7 +64,7 @@ export function useMutateSpace() {
         args: Prisma.SelectSubset<T, Prisma.SpaceUpdateManyArgs>,
     ) {
         try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/space/updateMany`, args, mutate);
+            return await request.put<Prisma.BatchPayload>(`${endpoint}/space/updateMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -76,7 +77,7 @@ export function useMutateSpace() {
 
     async function upsertSpace<T extends Prisma.SpaceUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUpsertArgs>) {
         try {
-            return await request.post<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/upsert`, args, mutate);
+            return await request.post<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/upsert`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -89,7 +90,7 @@ export function useMutateSpace() {
 
     async function deleteSpace<T extends Prisma.SpaceDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceDeleteArgs>) {
         try {
-            return await request.del<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/delete`, args, mutate);
+            return await request.del<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/delete`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -104,7 +105,7 @@ export function useMutateSpace() {
         args: Prisma.SelectSubset<T, Prisma.SpaceDeleteManyArgs>,
     ) {
         try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/space/deleteMany`, args, mutate);
+            return await request.del<Prisma.BatchPayload>(`${endpoint}/space/deleteMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -121,32 +122,32 @@ export function useFindManySpace<T extends Prisma.SpaceFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs>,
     options?: RequestOptions<Array<Prisma.SpaceGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.SpaceGetPayload<T>>>(`${endpoint}/space/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Array<Prisma.SpaceGetPayload<T>>>(`${endpoint}/space/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueSpace<T extends Prisma.SpaceFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindUniqueArgs>,
     options?: RequestOptions<Prisma.SpaceGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstSpace<T extends Prisma.SpaceFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindFirstArgs>,
     options?: RequestOptions<Prisma.SpaceGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findFirst`, args, options, fetch);
 }
 
 export function useAggregateSpace<T extends Prisma.SpaceAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.SpaceAggregateArgs>,
     options?: RequestOptions<Prisma.GetSpaceAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetSpaceAggregateType<T>>(`${endpoint}/space/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.GetSpaceAggregateType<T>>(`${endpoint}/space/aggregate`, args, options, fetch);
 }
 
 export function useGroupBySpace<
@@ -214,7 +215,7 @@ export function useGroupBySpace<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         {} extends InputErrors
             ? Array<
@@ -227,7 +228,7 @@ export function useGroupBySpace<
                   }
               >
             : InputErrors
-    >(`${endpoint}/space/groupBy`, args, options);
+    >(`${endpoint}/space/groupBy`, args, options, fetch);
 }
 
 export function useCountSpace<T extends Prisma.SpaceCountArgs>(
@@ -240,12 +241,12 @@ export function useCountSpace<T extends Prisma.SpaceCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType>
             : number
-    >(`${endpoint}/space/count`, args, options);
+    >(`${endpoint}/space/count`, args, options, fetch);
 }

@@ -5,7 +5,7 @@ import { RequestHandlerContext, type RequestOptions } from './_helper';
 import * as request from './_helper';
 
 export function useMutateList() {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     const prefixesToMutate = [
         `${endpoint}/list/find`,
         `${endpoint}/list/aggregate`,
@@ -20,6 +20,7 @@ export function useMutateList() {
                 `${endpoint}/list/create`,
                 args,
                 mutate,
+                fetch,
             );
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
@@ -35,7 +36,7 @@ export function useMutateList() {
         args: Prisma.SelectSubset<T, Prisma.ListCreateManyArgs>,
     ) {
         try {
-            return await request.post<Prisma.BatchPayload>(`${endpoint}/list/createMany`, args, mutate);
+            return await request.post<Prisma.BatchPayload>(`${endpoint}/list/createMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -48,7 +49,7 @@ export function useMutateList() {
 
     async function updateList<T extends Prisma.ListUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.ListUpdateArgs>) {
         try {
-            return await request.put<Prisma.ListGetPayload<T>>(`${endpoint}/list/update`, args, mutate);
+            return await request.put<Prisma.ListGetPayload<T>>(`${endpoint}/list/update`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -63,7 +64,7 @@ export function useMutateList() {
         args: Prisma.SelectSubset<T, Prisma.ListUpdateManyArgs>,
     ) {
         try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/list/updateMany`, args, mutate);
+            return await request.put<Prisma.BatchPayload>(`${endpoint}/list/updateMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -76,7 +77,7 @@ export function useMutateList() {
 
     async function upsertList<T extends Prisma.ListUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.ListUpsertArgs>) {
         try {
-            return await request.post<Prisma.ListGetPayload<T>>(`${endpoint}/list/upsert`, args, mutate);
+            return await request.post<Prisma.ListGetPayload<T>>(`${endpoint}/list/upsert`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -89,7 +90,7 @@ export function useMutateList() {
 
     async function deleteList<T extends Prisma.ListDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.ListDeleteArgs>) {
         try {
-            return await request.del<Prisma.ListGetPayload<T>>(`${endpoint}/list/delete`, args, mutate);
+            return await request.del<Prisma.ListGetPayload<T>>(`${endpoint}/list/delete`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -104,7 +105,7 @@ export function useMutateList() {
         args: Prisma.SelectSubset<T, Prisma.ListDeleteManyArgs>,
     ) {
         try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/list/deleteMany`, args, mutate);
+            return await request.del<Prisma.BatchPayload>(`${endpoint}/list/deleteMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -121,32 +122,32 @@ export function useFindManyList<T extends Prisma.ListFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindManyArgs>,
     options?: RequestOptions<Array<Prisma.ListGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.ListGetPayload<T>>>(`${endpoint}/list/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Array<Prisma.ListGetPayload<T>>>(`${endpoint}/list/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueList<T extends Prisma.ListFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindUniqueArgs>,
     options?: RequestOptions<Prisma.ListGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.ListGetPayload<T>>(`${endpoint}/list/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.ListGetPayload<T>>(`${endpoint}/list/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstList<T extends Prisma.ListFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindFirstArgs>,
     options?: RequestOptions<Prisma.ListGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.ListGetPayload<T>>(`${endpoint}/list/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.ListGetPayload<T>>(`${endpoint}/list/findFirst`, args, options, fetch);
 }
 
 export function useAggregateList<T extends Prisma.ListAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.ListAggregateArgs>,
     options?: RequestOptions<Prisma.GetListAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetListAggregateType<T>>(`${endpoint}/list/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.GetListAggregateType<T>>(`${endpoint}/list/aggregate`, args, options, fetch);
 }
 
 export function useGroupByList<
@@ -214,7 +215,7 @@ export function useGroupByList<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         {} extends InputErrors
             ? Array<
@@ -227,7 +228,7 @@ export function useGroupByList<
                   }
               >
             : InputErrors
-    >(`${endpoint}/list/groupBy`, args, options);
+    >(`${endpoint}/list/groupBy`, args, options, fetch);
 }
 
 export function useCountList<T extends Prisma.ListCountArgs>(
@@ -240,12 +241,12 @@ export function useCountList<T extends Prisma.ListCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType>
             : number
-    >(`${endpoint}/list/count`, args, options);
+    >(`${endpoint}/list/count`, args, options, fetch);
 }

@@ -5,7 +5,7 @@ import { RequestHandlerContext, type RequestOptions } from './_helper';
 import * as request from './_helper';
 
 export function useMutateTodo() {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     const prefixesToMutate = [
         `${endpoint}/todo/find`,
         `${endpoint}/todo/aggregate`,
@@ -20,6 +20,7 @@ export function useMutateTodo() {
                 `${endpoint}/todo/create`,
                 args,
                 mutate,
+                fetch,
             );
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
@@ -35,7 +36,7 @@ export function useMutateTodo() {
         args: Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>,
     ) {
         try {
-            return await request.post<Prisma.BatchPayload>(`${endpoint}/todo/createMany`, args, mutate);
+            return await request.post<Prisma.BatchPayload>(`${endpoint}/todo/createMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -48,7 +49,7 @@ export function useMutateTodo() {
 
     async function updateTodo<T extends Prisma.TodoUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>) {
         try {
-            return await request.put<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/update`, args, mutate);
+            return await request.put<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/update`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -63,7 +64,7 @@ export function useMutateTodo() {
         args: Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>,
     ) {
         try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/todo/updateMany`, args, mutate);
+            return await request.put<Prisma.BatchPayload>(`${endpoint}/todo/updateMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -76,7 +77,7 @@ export function useMutateTodo() {
 
     async function upsertTodo<T extends Prisma.TodoUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>) {
         try {
-            return await request.post<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/upsert`, args, mutate);
+            return await request.post<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/upsert`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -89,7 +90,7 @@ export function useMutateTodo() {
 
     async function deleteTodo<T extends Prisma.TodoDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>) {
         try {
-            return await request.del<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/delete`, args, mutate);
+            return await request.del<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/delete`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -104,7 +105,7 @@ export function useMutateTodo() {
         args: Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>,
     ) {
         try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/todo/deleteMany`, args, mutate);
+            return await request.del<Prisma.BatchPayload>(`${endpoint}/todo/deleteMany`, args, mutate, fetch);
         } catch (err: any) {
             if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
                 // unable to readback data
@@ -121,32 +122,32 @@ export function useFindManyTodo<T extends Prisma.TodoFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindManyArgs>,
     options?: RequestOptions<Array<Prisma.TodoGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.TodoGetPayload<T>>>(`${endpoint}/todo/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Array<Prisma.TodoGetPayload<T>>>(`${endpoint}/todo/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueTodo<T extends Prisma.TodoFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindUniqueArgs>,
     options?: RequestOptions<Prisma.TodoGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstTodo<T extends Prisma.TodoFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindFirstArgs>,
     options?: RequestOptions<Prisma.TodoGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findFirst`, args, options, fetch);
 }
 
 export function useAggregateTodo<T extends Prisma.TodoAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.TodoAggregateArgs>,
     options?: RequestOptions<Prisma.GetTodoAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetTodoAggregateType<T>>(`${endpoint}/todo/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.GetTodoAggregateType<T>>(`${endpoint}/todo/aggregate`, args, options, fetch);
 }
 
 export function useGroupByTodo<
@@ -214,7 +215,7 @@ export function useGroupByTodo<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         {} extends InputErrors
             ? Array<
@@ -227,7 +228,7 @@ export function useGroupByTodo<
                   }
               >
             : InputErrors
-    >(`${endpoint}/todo/groupBy`, args, options);
+    >(`${endpoint}/todo/groupBy`, args, options, fetch);
 }
 
 export function useCountTodo<T extends Prisma.TodoCountArgs>(
@@ -240,12 +241,12 @@ export function useCountTodo<T extends Prisma.TodoCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType>
             : number
-    >(`${endpoint}/todo/count`, args, options);
+    >(`${endpoint}/todo/count`, args, options, fetch);
 }
