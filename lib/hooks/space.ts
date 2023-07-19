@@ -1,8 +1,8 @@
 /* eslint-disable */
 import type { Prisma, Space } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions } from './_helper';
-import * as request from './_helper';
+import { RequestHandlerContext, type RequestOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateSpace() {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
@@ -15,105 +15,79 @@ export function useMutateSpace() {
     const mutate = request.getMutate(prefixesToMutate);
 
     async function createSpace<T extends Prisma.SpaceCreateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceCreateArgs>) {
-        try {
-            return await request.post<Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>>(
-                `${endpoint}/space/create`,
-                args,
-                mutate,
-                fetch,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>, true>(
+            `${endpoint}/space/create`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function createManySpace<T extends Prisma.SpaceCreateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceCreateManyArgs>,
     ) {
-        try {
-            return await request.post<Prisma.BatchPayload>(`${endpoint}/space/createMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.BatchPayload, false>(
+            `${endpoint}/space/createMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
 
     async function updateSpace<T extends Prisma.SpaceUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUpdateArgs>) {
-        try {
-            return await request.put<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/update`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.SpaceGetPayload<T>, true>(
+            `${endpoint}/space/update`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function updateManySpace<T extends Prisma.SpaceUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceUpdateManyArgs>,
     ) {
-        try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/space/updateMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.BatchPayload, false>(
+            `${endpoint}/space/updateMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
 
     async function upsertSpace<T extends Prisma.SpaceUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUpsertArgs>) {
-        try {
-            return await request.post<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/upsert`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.SpaceGetPayload<T>, true>(
+            `${endpoint}/space/upsert`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function deleteSpace<T extends Prisma.SpaceDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceDeleteArgs>) {
-        try {
-            return await request.del<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/delete`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.SpaceGetPayload<T>, true>(
+            `${endpoint}/space/delete`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function deleteManySpace<T extends Prisma.SpaceDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceDeleteManyArgs>,
     ) {
-        try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/space/deleteMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.BatchPayload, false>(
+            `${endpoint}/space/deleteMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
     return { createSpace, createManySpace, updateSpace, updateManySpace, upsertSpace, deleteSpace, deleteManySpace };
 }
@@ -157,7 +131,7 @@ export function useGroupBySpace<
         ? { orderBy: Prisma.SpaceGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.SpaceGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -204,7 +178,7 @@ export function useGroupBySpace<
     options?: RequestOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.SpaceGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.SpaceGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.SpaceGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -219,7 +193,7 @@ export function useGroupBySpace<
     return request.get<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.SpaceGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.SpaceGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.SpaceGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number

@@ -1,8 +1,8 @@
 /* eslint-disable */
 import type { Prisma, Account } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions } from './_helper';
-import * as request from './_helper';
+import { RequestHandlerContext, type RequestOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateAccount() {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
@@ -17,111 +17,85 @@ export function useMutateAccount() {
     async function createAccount<T extends Prisma.AccountCreateArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountCreateArgs>,
     ) {
-        try {
-            return await request.post<Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>>(
-                `${endpoint}/account/create`,
-                args,
-                mutate,
-                fetch,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>, true>(
+            `${endpoint}/account/create`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function createManyAccount<T extends Prisma.AccountCreateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountCreateManyArgs>,
     ) {
-        try {
-            return await request.post<Prisma.BatchPayload>(`${endpoint}/account/createMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.BatchPayload, false>(
+            `${endpoint}/account/createMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
 
     async function updateAccount<T extends Prisma.AccountUpdateArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>,
     ) {
-        try {
-            return await request.put<Prisma.AccountGetPayload<T>>(`${endpoint}/account/update`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.AccountGetPayload<T>, true>(
+            `${endpoint}/account/update`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function updateManyAccount<T extends Prisma.AccountUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountUpdateManyArgs>,
     ) {
-        try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/account/updateMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.BatchPayload, false>(
+            `${endpoint}/account/updateMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
 
     async function upsertAccount<T extends Prisma.AccountUpsertArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>,
     ) {
-        try {
-            return await request.post<Prisma.AccountGetPayload<T>>(`${endpoint}/account/upsert`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.AccountGetPayload<T>, true>(
+            `${endpoint}/account/upsert`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function deleteAccount<T extends Prisma.AccountDeleteArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountDeleteArgs>,
     ) {
-        try {
-            return await request.del<Prisma.AccountGetPayload<T>>(`${endpoint}/account/delete`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.AccountGetPayload<T>, true>(
+            `${endpoint}/account/delete`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function deleteManyAccount<T extends Prisma.AccountDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountDeleteManyArgs>,
     ) {
-        try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/account/deleteMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.BatchPayload, false>(
+            `${endpoint}/account/deleteMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
     return {
         createAccount,
@@ -173,7 +147,7 @@ export function useGroupByAccount<
         ? { orderBy: Prisma.AccountGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.AccountGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -220,7 +194,7 @@ export function useGroupByAccount<
     options?: RequestOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.AccountGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.AccountGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.AccountGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -235,7 +209,7 @@ export function useGroupByAccount<
     return request.get<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.AccountGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.AccountGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.AccountGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number

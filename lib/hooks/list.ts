@@ -1,8 +1,8 @@
 /* eslint-disable */
 import type { Prisma, List } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions } from './_helper';
-import * as request from './_helper';
+import { RequestHandlerContext, type RequestOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateList() {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
@@ -15,105 +15,49 @@ export function useMutateList() {
     const mutate = request.getMutate(prefixesToMutate);
 
     async function createList<T extends Prisma.ListCreateArgs>(args: Prisma.SelectSubset<T, Prisma.ListCreateArgs>) {
-        try {
-            return await request.post<Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>>>(
-                `${endpoint}/list/create`,
-                args,
-                mutate,
-                fetch,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>>, true>(
+            `${endpoint}/list/create`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function createManyList<T extends Prisma.ListCreateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.ListCreateManyArgs>,
     ) {
-        try {
-            return await request.post<Prisma.BatchPayload>(`${endpoint}/list/createMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.BatchPayload, false>(
+            `${endpoint}/list/createMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
 
     async function updateList<T extends Prisma.ListUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.ListUpdateArgs>) {
-        try {
-            return await request.put<Prisma.ListGetPayload<T>>(`${endpoint}/list/update`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.ListGetPayload<T>, true>(`${endpoint}/list/update`, args, mutate, fetch, true);
     }
 
     async function updateManyList<T extends Prisma.ListUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.ListUpdateManyArgs>,
     ) {
-        try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/list/updateMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.BatchPayload, false>(`${endpoint}/list/updateMany`, args, mutate, fetch, false);
     }
 
     async function upsertList<T extends Prisma.ListUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.ListUpsertArgs>) {
-        try {
-            return await request.post<Prisma.ListGetPayload<T>>(`${endpoint}/list/upsert`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.ListGetPayload<T>, true>(`${endpoint}/list/upsert`, args, mutate, fetch, true);
     }
 
     async function deleteList<T extends Prisma.ListDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.ListDeleteArgs>) {
-        try {
-            return await request.del<Prisma.ListGetPayload<T>>(`${endpoint}/list/delete`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.ListGetPayload<T>, true>(`${endpoint}/list/delete`, args, mutate, fetch, true);
     }
 
     async function deleteManyList<T extends Prisma.ListDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.ListDeleteManyArgs>,
     ) {
-        try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/list/deleteMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.BatchPayload, false>(`${endpoint}/list/deleteMany`, args, mutate, fetch, false);
     }
     return { createList, createManyList, updateList, updateManyList, upsertList, deleteList, deleteManyList };
 }
@@ -157,7 +101,7 @@ export function useGroupByList<
         ? { orderBy: Prisma.ListGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.ListGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -204,7 +148,7 @@ export function useGroupByList<
     options?: RequestOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.ListGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.ListGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.ListGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -219,7 +163,7 @@ export function useGroupByList<
     return request.get<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.ListGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.ListGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.ListGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number

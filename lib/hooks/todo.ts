@@ -1,8 +1,8 @@
 /* eslint-disable */
 import type { Prisma, Todo } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions } from './_helper';
-import * as request from './_helper';
+import { RequestHandlerContext, type RequestOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateTodo() {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
@@ -15,105 +15,49 @@ export function useMutateTodo() {
     const mutate = request.getMutate(prefixesToMutate);
 
     async function createTodo<T extends Prisma.TodoCreateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>) {
-        try {
-            return await request.post<Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>>(
-                `${endpoint}/todo/create`,
-                args,
-                mutate,
-                fetch,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>, true>(
+            `${endpoint}/todo/create`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function createManyTodo<T extends Prisma.TodoCreateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>,
     ) {
-        try {
-            return await request.post<Prisma.BatchPayload>(`${endpoint}/todo/createMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.BatchPayload, false>(
+            `${endpoint}/todo/createMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
 
     async function updateTodo<T extends Prisma.TodoUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>) {
-        try {
-            return await request.put<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/update`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.TodoGetPayload<T>, true>(`${endpoint}/todo/update`, args, mutate, fetch, true);
     }
 
     async function updateManyTodo<T extends Prisma.TodoUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>,
     ) {
-        try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/todo/updateMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.BatchPayload, false>(`${endpoint}/todo/updateMany`, args, mutate, fetch, false);
     }
 
     async function upsertTodo<T extends Prisma.TodoUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>) {
-        try {
-            return await request.post<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/upsert`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.TodoGetPayload<T>, true>(`${endpoint}/todo/upsert`, args, mutate, fetch, true);
     }
 
     async function deleteTodo<T extends Prisma.TodoDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>) {
-        try {
-            return await request.del<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/delete`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.TodoGetPayload<T>, true>(`${endpoint}/todo/delete`, args, mutate, fetch, true);
     }
 
     async function deleteManyTodo<T extends Prisma.TodoDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>,
     ) {
-        try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/todo/deleteMany`, args, mutate, fetch);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.BatchPayload, false>(`${endpoint}/todo/deleteMany`, args, mutate, fetch, false);
     }
     return { createTodo, createManyTodo, updateTodo, updateManyTodo, upsertTodo, deleteTodo, deleteManyTodo };
 }
@@ -157,7 +101,7 @@ export function useGroupByTodo<
         ? { orderBy: Prisma.TodoGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.TodoGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -204,7 +148,7 @@ export function useGroupByTodo<
     options?: RequestOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.TodoGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.TodoGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -219,7 +163,7 @@ export function useGroupByTodo<
     return request.get<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.TodoGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.TodoGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
