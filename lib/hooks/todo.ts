@@ -1,7 +1,12 @@
 /* eslint-disable */
 import type { Prisma, Todo } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import {
+    RequestHandlerContext,
+    type RequestOptions,
+    type PickEnumerable,
+    type CheckSelect,
+} from '@zenstackhq/swr/runtime';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateTodo() {
@@ -15,7 +20,7 @@ export function useMutateTodo() {
     const mutate = request.getMutate(prefixesToMutate);
 
     async function createTodo<T extends Prisma.TodoCreateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>) {
-        return await request.post<Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>, true>(
+        return await request.post<CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>, true>(
             `${endpoint}/todo/create`,
             args,
             mutate,

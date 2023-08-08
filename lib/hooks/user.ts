@@ -1,7 +1,12 @@
 /* eslint-disable */
 import type { Prisma, User } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import {
+    RequestHandlerContext,
+    type RequestOptions,
+    type PickEnumerable,
+    type CheckSelect,
+} from '@zenstackhq/swr/runtime';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateUser() {
@@ -15,7 +20,7 @@ export function useMutateUser() {
     const mutate = request.getMutate(prefixesToMutate);
 
     async function createUser<T extends Prisma.UserCreateArgs>(args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>) {
-        return await request.post<Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>, true>(
+        return await request.post<CheckSelect<T, User, Prisma.UserGetPayload<T>>, true>(
             `${endpoint}/user/create`,
             args,
             mutate,

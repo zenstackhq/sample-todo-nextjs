@@ -1,7 +1,12 @@
 /* eslint-disable */
 import type { Prisma, Space } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import {
+    RequestHandlerContext,
+    type RequestOptions,
+    type PickEnumerable,
+    type CheckSelect,
+} from '@zenstackhq/swr/runtime';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateSpace() {
@@ -15,7 +20,7 @@ export function useMutateSpace() {
     const mutate = request.getMutate(prefixesToMutate);
 
     async function createSpace<T extends Prisma.SpaceCreateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceCreateArgs>) {
-        return await request.post<Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>, true>(
+        return await request.post<CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>, true>(
             `${endpoint}/space/create`,
             args,
             mutate,

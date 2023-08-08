@@ -1,7 +1,12 @@
 /* eslint-disable */
 import type { Prisma, List } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import {
+    RequestHandlerContext,
+    type RequestOptions,
+    type PickEnumerable,
+    type CheckSelect,
+} from '@zenstackhq/swr/runtime';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateList() {
@@ -15,7 +20,7 @@ export function useMutateList() {
     const mutate = request.getMutate(prefixesToMutate);
 
     async function createList<T extends Prisma.ListCreateArgs>(args: Prisma.SelectSubset<T, Prisma.ListCreateArgs>) {
-        return await request.post<Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>>, true>(
+        return await request.post<CheckSelect<T, List, Prisma.ListGetPayload<T>>, true>(
             `${endpoint}/list/create`,
             args,
             mutate,
