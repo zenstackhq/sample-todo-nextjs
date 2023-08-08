@@ -24,8 +24,8 @@
         "@prisma/client": "^5.0.0",
         "@tanstack/react-query": "^4.20.2",
         "@vercel/analytics": "^1.0.1",
-        "@zenstackhq/runtime": "1.0.0-beta.13",
-        "@zenstackhq/server": "1.0.0-beta.13",
+        "@zenstackhq/runtime": "1.0.0-beta.15",
+        "@zenstackhq/server": "1.0.0-beta.15",
         "babel-plugin-superjson-next": "^0.4.5",
         "bcryptjs": "^2.4.3",
         "daisyui": "^2.31.0",
@@ -45,7 +45,7 @@
         "@types/node": "^14.17.3",
         "@types/react": "18.0.21",
         "@types/react-dom": "18.0.6",
-        "@zenstackhq/swr": "1.0.0-beta.13",
+        "@zenstackhq/swr": "1.0.0-beta.15",
         "autoprefixer": "^10.4.12",
         "eslint": "^7.19.0",
         "eslint-config-next": "12.3.1",
@@ -53,6 +53,6 @@
         "prisma": "^5.0.0",
         "tailwindcss": "^3.1.8",
         "typescript": "^5.1.6",
-        "zenstack": "1.0.0-beta.13"
+        "zenstack": "1.0.0-beta.15"
     }
 }
