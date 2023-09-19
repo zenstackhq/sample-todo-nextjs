@@ -3,7 +3,9 @@ import type { Prisma, Account } from '@prisma/client';
 import { useContext } from 'react';
 import {
     RequestHandlerContext,
+    type GetNextArgs,
     type RequestOptions,
+    type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
 } from '@zenstackhq/swr/runtime';
@@ -119,6 +121,20 @@ export function useFindManyAccount<T extends Prisma.AccountFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<Array<Prisma.AccountGetPayload<T>>>(`${endpoint}/account/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManyAccount<
+    T extends Prisma.AccountFindManyArgs,
+    R extends Array<Prisma.AccountGetPayload<T>>,
+>(
+    getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.AccountFindManyArgs> | undefined, R>,
+    options?: InfiniteRequestOptions<Array<Prisma.AccountGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.infiniteGet<
+        Prisma.SelectSubset<T, Prisma.AccountFindManyArgs> | undefined,
+        Array<Prisma.AccountGetPayload<T>>
+    >(`${endpoint}/account/findMany`, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueAccount<T extends Prisma.AccountFindUniqueArgs>(

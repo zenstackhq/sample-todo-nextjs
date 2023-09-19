@@ -3,7 +3,9 @@ import type { Prisma, List } from '@prisma/client';
 import { useContext } from 'react';
 import {
     RequestHandlerContext,
+    type GetNextArgs,
     type RequestOptions,
+    type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
 } from '@zenstackhq/swr/runtime';
@@ -73,6 +75,17 @@ export function useFindManyList<T extends Prisma.ListFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<Array<Prisma.ListGetPayload<T>>>(`${endpoint}/list/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManyList<T extends Prisma.ListFindManyArgs, R extends Array<Prisma.ListGetPayload<T>>>(
+    getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.ListFindManyArgs> | undefined, R>,
+    options?: InfiniteRequestOptions<Array<Prisma.ListGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.infiniteGet<
+        Prisma.SelectSubset<T, Prisma.ListFindManyArgs> | undefined,
+        Array<Prisma.ListGetPayload<T>>
+    >(`${endpoint}/list/findMany`, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueList<T extends Prisma.ListFindUniqueArgs>(

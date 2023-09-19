@@ -3,7 +3,9 @@ import type { Prisma, Todo } from '@prisma/client';
 import { useContext } from 'react';
 import {
     RequestHandlerContext,
+    type GetNextArgs,
     type RequestOptions,
+    type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
 } from '@zenstackhq/swr/runtime';
@@ -73,6 +75,17 @@ export function useFindManyTodo<T extends Prisma.TodoFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<Array<Prisma.TodoGetPayload<T>>>(`${endpoint}/todo/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManyTodo<T extends Prisma.TodoFindManyArgs, R extends Array<Prisma.TodoGetPayload<T>>>(
+    getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.TodoFindManyArgs> | undefined, R>,
+    options?: InfiniteRequestOptions<Array<Prisma.TodoGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.infiniteGet<
+        Prisma.SelectSubset<T, Prisma.TodoFindManyArgs> | undefined,
+        Array<Prisma.TodoGetPayload<T>>
+    >(`${endpoint}/todo/findMany`, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueTodo<T extends Prisma.TodoFindUniqueArgs>(

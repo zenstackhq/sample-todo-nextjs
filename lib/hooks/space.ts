@@ -3,7 +3,9 @@ import type { Prisma, Space } from '@prisma/client';
 import { useContext } from 'react';
 import {
     RequestHandlerContext,
+    type GetNextArgs,
     type RequestOptions,
+    type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
 } from '@zenstackhq/swr/runtime';
@@ -103,6 +105,20 @@ export function useFindManySpace<T extends Prisma.SpaceFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<Array<Prisma.SpaceGetPayload<T>>>(`${endpoint}/space/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManySpace<
+    T extends Prisma.SpaceFindManyArgs,
+    R extends Array<Prisma.SpaceGetPayload<T>>,
+>(
+    getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs> | undefined, R>,
+    options?: InfiniteRequestOptions<Array<Prisma.SpaceGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.infiniteGet<
+        Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs> | undefined,
+        Array<Prisma.SpaceGetPayload<T>>
+    >(`${endpoint}/space/findMany`, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueSpace<T extends Prisma.SpaceFindUniqueArgs>(
