@@ -38,7 +38,7 @@ export default function TodoList(props: Props) {
                     owner: true,
                 },
                 orderBy: {
-                    updatedAt: 'desc',
+                    createdAt: 'desc',
                 },
                 take: PAGE_SIZE,
                 skip: pageIndex * PAGE_SIZE,

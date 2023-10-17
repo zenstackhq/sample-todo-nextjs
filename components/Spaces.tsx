@@ -27,7 +27,7 @@ export default function Spaces({ spaces }: Props) {
         <ul className="flex flex-wrap gap-4">
             {spaces?.map((space) => (
                 <li
-                    className="card w-80 h-32 shadow-xl text-gray-600 cursor-pointer hover:bg-gray-50 border"
+                    className="card w-80 h-32 flex justify-center shadow-xl text-gray-600 cursor-pointer hover:bg-gray-50 border"
                     key={space.id}
                 >
                     <SpaceItem space={space} />
