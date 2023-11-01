@@ -1,6 +1,5 @@
 /* eslint-disable */
 import type { Prisma, Account } from '@prisma/client';
-import { useContext } from 'react';
 import {
     RequestHandlerContext,
     type GetNextArgs,
@@ -8,18 +7,14 @@ import {
     type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
+    useHooksContext,
 } from '@zenstackhq/swr/runtime';
+import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateAccount() {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const prefixesToMutate = [
-        `${endpoint}/account/find`,
-        `${endpoint}/account/aggregate`,
-        `${endpoint}/account/count`,
-        `${endpoint}/account/groupBy`,
-    ];
-    const mutate = request.getMutate(prefixesToMutate);
+    const { endpoint, fetch, logging } = useHooksContext();
+    const mutate = request.useMutate('Account', metadata, logging);
 
     async function createAccount<T extends Prisma.AccountCreateArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountCreateArgs>,
@@ -119,8 +114,8 @@ export function useFindManyAccount<T extends Prisma.AccountFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindManyArgs>,
     options?: RequestOptions<Array<Prisma.AccountGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.AccountGetPayload<T>>>(`${endpoint}/account/findMany`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Array<Prisma.AccountGetPayload<T>>>('Account', 'findMany', endpoint, args, options, fetch);
 }
 
 export function useInfiniteFindManyAccount<
@@ -130,35 +125,35 @@ export function useInfiniteFindManyAccount<
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.AccountFindManyArgs> | undefined, R>,
     options?: InfiniteRequestOptions<Array<Prisma.AccountGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.infiniteGet<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useInfiniteGet<
         Prisma.SelectSubset<T, Prisma.AccountFindManyArgs> | undefined,
         Array<Prisma.AccountGetPayload<T>>
-    >(`${endpoint}/account/findMany`, getNextArgs, options, fetch);
+    >('Account', 'findMany', endpoint, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueAccount<T extends Prisma.AccountFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindUniqueArgs>,
     options?: RequestOptions<Prisma.AccountGetPayload<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findUnique`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.AccountGetPayload<T>>('Account', 'findUnique', endpoint, args, options, fetch);
 }
 
 export function useFindFirstAccount<T extends Prisma.AccountFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindFirstArgs>,
     options?: RequestOptions<Prisma.AccountGetPayload<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findFirst`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.AccountGetPayload<T>>('Account', 'findFirst', endpoint, args, options, fetch);
 }
 
 export function useAggregateAccount<T extends Prisma.AccountAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.AccountAggregateArgs>,
     options?: RequestOptions<Prisma.GetAccountAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetAccountAggregateType<T>>(`${endpoint}/account/aggregate`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.GetAccountAggregateType<T>>('Account', 'aggregate', endpoint, args, options, fetch);
 }
 
 export function useGroupByAccount<
@@ -226,8 +221,8 @@ export function useGroupByAccount<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.AccountGroupByOutputType, T['by']> & {
@@ -239,7 +234,7 @@ export function useGroupByAccount<
                   }
               >
             : InputErrors
-    >(`${endpoint}/account/groupBy`, args, options, fetch);
+    >('Account', 'groupBy', endpoint, args, options, fetch);
 }
 
 export function useCountAccount<T extends Prisma.AccountCountArgs>(
@@ -252,12 +247,12 @@ export function useCountAccount<T extends Prisma.AccountCountArgs>(
             : number
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.AccountCountAggregateOutputType>
             : number
-    >(`${endpoint}/account/count`, args, options, fetch);
+    >('Account', 'count', endpoint, args, options, fetch);
 }

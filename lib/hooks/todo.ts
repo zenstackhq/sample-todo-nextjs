@@ -1,6 +1,5 @@
 /* eslint-disable */
 import type { Prisma, Todo } from '@prisma/client';
-import { useContext } from 'react';
 import {
     RequestHandlerContext,
     type GetNextArgs,
@@ -8,18 +7,14 @@ import {
     type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
+    useHooksContext,
 } from '@zenstackhq/swr/runtime';
+import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateTodo() {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const prefixesToMutate = [
-        `${endpoint}/todo/find`,
-        `${endpoint}/todo/aggregate`,
-        `${endpoint}/todo/count`,
-        `${endpoint}/todo/groupBy`,
-    ];
-    const mutate = request.getMutate(prefixesToMutate);
+    const { endpoint, fetch, logging } = useHooksContext();
+    const mutate = request.useMutate('Todo', metadata, logging);
 
     async function createTodo<T extends Prisma.TodoCreateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>) {
         return await request.post<CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>, true>(
@@ -73,43 +68,43 @@ export function useFindManyTodo<T extends Prisma.TodoFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindManyArgs>,
     options?: RequestOptions<Array<Prisma.TodoGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.TodoGetPayload<T>>>(`${endpoint}/todo/findMany`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Array<Prisma.TodoGetPayload<T>>>('Todo', 'findMany', endpoint, args, options, fetch);
 }
 
 export function useInfiniteFindManyTodo<T extends Prisma.TodoFindManyArgs, R extends Array<Prisma.TodoGetPayload<T>>>(
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.TodoFindManyArgs> | undefined, R>,
     options?: InfiniteRequestOptions<Array<Prisma.TodoGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.infiniteGet<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useInfiniteGet<
         Prisma.SelectSubset<T, Prisma.TodoFindManyArgs> | undefined,
         Array<Prisma.TodoGetPayload<T>>
-    >(`${endpoint}/todo/findMany`, getNextArgs, options, fetch);
+    >('Todo', 'findMany', endpoint, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueTodo<T extends Prisma.TodoFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindUniqueArgs>,
     options?: RequestOptions<Prisma.TodoGetPayload<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findUnique`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.TodoGetPayload<T>>('Todo', 'findUnique', endpoint, args, options, fetch);
 }
 
 export function useFindFirstTodo<T extends Prisma.TodoFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindFirstArgs>,
     options?: RequestOptions<Prisma.TodoGetPayload<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.TodoGetPayload<T>>(`${endpoint}/todo/findFirst`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.TodoGetPayload<T>>('Todo', 'findFirst', endpoint, args, options, fetch);
 }
 
 export function useAggregateTodo<T extends Prisma.TodoAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.TodoAggregateArgs>,
     options?: RequestOptions<Prisma.GetTodoAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetTodoAggregateType<T>>(`${endpoint}/todo/aggregate`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.GetTodoAggregateType<T>>('Todo', 'aggregate', endpoint, args, options, fetch);
 }
 
 export function useGroupByTodo<
@@ -177,8 +172,8 @@ export function useGroupByTodo<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
@@ -190,7 +185,7 @@ export function useGroupByTodo<
                   }
               >
             : InputErrors
-    >(`${endpoint}/todo/groupBy`, args, options, fetch);
+    >('Todo', 'groupBy', endpoint, args, options, fetch);
 }
 
 export function useCountTodo<T extends Prisma.TodoCountArgs>(
@@ -203,12 +198,12 @@ export function useCountTodo<T extends Prisma.TodoCountArgs>(
             : number
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType>
             : number
-    >(`${endpoint}/todo/count`, args, options, fetch);
+    >('Todo', 'count', endpoint, args, options, fetch);
 }

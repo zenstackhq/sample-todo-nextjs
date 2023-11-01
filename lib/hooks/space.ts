@@ -1,6 +1,5 @@
 /* eslint-disable */
 import type { Prisma, Space } from '@prisma/client';
-import { useContext } from 'react';
 import {
     RequestHandlerContext,
     type GetNextArgs,
@@ -8,18 +7,14 @@ import {
     type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
+    useHooksContext,
 } from '@zenstackhq/swr/runtime';
+import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateSpace() {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const prefixesToMutate = [
-        `${endpoint}/space/find`,
-        `${endpoint}/space/aggregate`,
-        `${endpoint}/space/count`,
-        `${endpoint}/space/groupBy`,
-    ];
-    const mutate = request.getMutate(prefixesToMutate);
+    const { endpoint, fetch, logging } = useHooksContext();
+    const mutate = request.useMutate('Space', metadata, logging);
 
     async function createSpace<T extends Prisma.SpaceCreateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceCreateArgs>) {
         return await request.post<CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>, true>(
@@ -103,8 +98,8 @@ export function useFindManySpace<T extends Prisma.SpaceFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs>,
     options?: RequestOptions<Array<Prisma.SpaceGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.SpaceGetPayload<T>>>(`${endpoint}/space/findMany`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Array<Prisma.SpaceGetPayload<T>>>('Space', 'findMany', endpoint, args, options, fetch);
 }
 
 export function useInfiniteFindManySpace<
@@ -114,35 +109,35 @@ export function useInfiniteFindManySpace<
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs> | undefined, R>,
     options?: InfiniteRequestOptions<Array<Prisma.SpaceGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.infiniteGet<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useInfiniteGet<
         Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs> | undefined,
         Array<Prisma.SpaceGetPayload<T>>
-    >(`${endpoint}/space/findMany`, getNextArgs, options, fetch);
+    >('Space', 'findMany', endpoint, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueSpace<T extends Prisma.SpaceFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindUniqueArgs>,
     options?: RequestOptions<Prisma.SpaceGetPayload<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findUnique`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.SpaceGetPayload<T>>('Space', 'findUnique', endpoint, args, options, fetch);
 }
 
 export function useFindFirstSpace<T extends Prisma.SpaceFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindFirstArgs>,
     options?: RequestOptions<Prisma.SpaceGetPayload<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SpaceGetPayload<T>>(`${endpoint}/space/findFirst`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.SpaceGetPayload<T>>('Space', 'findFirst', endpoint, args, options, fetch);
 }
 
 export function useAggregateSpace<T extends Prisma.SpaceAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.SpaceAggregateArgs>,
     options?: RequestOptions<Prisma.GetSpaceAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetSpaceAggregateType<T>>(`${endpoint}/space/aggregate`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.GetSpaceAggregateType<T>>('Space', 'aggregate', endpoint, args, options, fetch);
 }
 
 export function useGroupBySpace<
@@ -210,8 +205,8 @@ export function useGroupBySpace<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.SpaceGroupByOutputType, T['by']> & {
@@ -223,7 +218,7 @@ export function useGroupBySpace<
                   }
               >
             : InputErrors
-    >(`${endpoint}/space/groupBy`, args, options, fetch);
+    >('Space', 'groupBy', endpoint, args, options, fetch);
 }
 
 export function useCountSpace<T extends Prisma.SpaceCountArgs>(
@@ -236,12 +231,12 @@ export function useCountSpace<T extends Prisma.SpaceCountArgs>(
             : number
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType>
             : number
-    >(`${endpoint}/space/count`, args, options, fetch);
+    >('Space', 'count', endpoint, args, options, fetch);
 }

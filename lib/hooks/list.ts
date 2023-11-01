@@ -1,6 +1,5 @@
 /* eslint-disable */
 import type { Prisma, List } from '@prisma/client';
-import { useContext } from 'react';
 import {
     RequestHandlerContext,
     type GetNextArgs,
@@ -8,18 +7,14 @@ import {
     type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
+    useHooksContext,
 } from '@zenstackhq/swr/runtime';
+import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateList() {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const prefixesToMutate = [
-        `${endpoint}/list/find`,
-        `${endpoint}/list/aggregate`,
-        `${endpoint}/list/count`,
-        `${endpoint}/list/groupBy`,
-    ];
-    const mutate = request.getMutate(prefixesToMutate);
+    const { endpoint, fetch, logging } = useHooksContext();
+    const mutate = request.useMutate('List', metadata, logging);
 
     async function createList<T extends Prisma.ListCreateArgs>(args: Prisma.SelectSubset<T, Prisma.ListCreateArgs>) {
         return await request.post<CheckSelect<T, List, Prisma.ListGetPayload<T>>, true>(
@@ -73,43 +68,43 @@ export function useFindManyList<T extends Prisma.ListFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindManyArgs>,
     options?: RequestOptions<Array<Prisma.ListGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.ListGetPayload<T>>>(`${endpoint}/list/findMany`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Array<Prisma.ListGetPayload<T>>>('List', 'findMany', endpoint, args, options, fetch);
 }
 
 export function useInfiniteFindManyList<T extends Prisma.ListFindManyArgs, R extends Array<Prisma.ListGetPayload<T>>>(
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.ListFindManyArgs> | undefined, R>,
     options?: InfiniteRequestOptions<Array<Prisma.ListGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.infiniteGet<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useInfiniteGet<
         Prisma.SelectSubset<T, Prisma.ListFindManyArgs> | undefined,
         Array<Prisma.ListGetPayload<T>>
-    >(`${endpoint}/list/findMany`, getNextArgs, options, fetch);
+    >('List', 'findMany', endpoint, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueList<T extends Prisma.ListFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindUniqueArgs>,
     options?: RequestOptions<Prisma.ListGetPayload<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.ListGetPayload<T>>(`${endpoint}/list/findUnique`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.ListGetPayload<T>>('List', 'findUnique', endpoint, args, options, fetch);
 }
 
 export function useFindFirstList<T extends Prisma.ListFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindFirstArgs>,
     options?: RequestOptions<Prisma.ListGetPayload<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.ListGetPayload<T>>(`${endpoint}/list/findFirst`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.ListGetPayload<T>>('List', 'findFirst', endpoint, args, options, fetch);
 }
 
 export function useAggregateList<T extends Prisma.ListAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.ListAggregateArgs>,
     options?: RequestOptions<Prisma.GetListAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetListAggregateType<T>>(`${endpoint}/list/aggregate`, args, options, fetch);
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<Prisma.GetListAggregateType<T>>('List', 'aggregate', endpoint, args, options, fetch);
 }
 
 export function useGroupByList<
@@ -177,8 +172,8 @@ export function useGroupByList<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.ListGroupByOutputType, T['by']> & {
@@ -190,7 +185,7 @@ export function useGroupByList<
                   }
               >
             : InputErrors
-    >(`${endpoint}/list/groupBy`, args, options, fetch);
+    >('List', 'groupBy', endpoint, args, options, fetch);
 }
 
 export function useCountList<T extends Prisma.ListCountArgs>(
@@ -203,12 +198,12 @@ export function useCountList<T extends Prisma.ListCountArgs>(
             : number
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
+    const { endpoint, fetch } = useHooksContext();
+    return request.useGet<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType>
             : number
-    >(`${endpoint}/list/count`, args, options, fetch);
+    >('List', 'count', endpoint, args, options, fetch);
 }
