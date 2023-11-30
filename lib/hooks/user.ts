@@ -1,110 +1,223 @@
 /* eslint-disable */
-import type { Prisma, User } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import {
-    RequestHandlerContext,
     type GetNextArgs,
-    type RequestOptions,
-    type InfiniteRequestOptions,
+    type QueryOptions,
+    type InfiniteQueryOptions,
+    type MutationOptions,
     type PickEnumerable,
-    type CheckSelect,
     useHooksContext,
 } from '@zenstackhq/swr/runtime';
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateUser() {
-    const { endpoint, fetch, logging } = useHooksContext();
-    const mutate = request.useMutate('User', metadata, logging);
+    const { endpoint, fetch } = useHooksContext();
+    const invalidate = request.useInvalidation('User', metadata);
 
+    /** @deprecated Use `useCreateUser` hook instead. */
     async function createUser<T extends Prisma.UserCreateArgs>(args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>) {
-        return await request.post<CheckSelect<T, User, Prisma.UserGetPayload<T>>, true>(
+        return await request.mutationRequest<Prisma.UserGetPayload<Prisma.UserCreateArgs> | undefined, true>(
+            'POST',
             `${endpoint}/user/create`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useCreateManyUser` hook instead. */
     async function createManyUser<T extends Prisma.UserCreateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.UserCreateManyArgs>,
     ) {
-        return await request.post<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'POST',
             `${endpoint}/user/createMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
     }
 
+    /** @deprecated Use `useUpdateUser` hook instead. */
     async function updateUser<T extends Prisma.UserUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>) {
-        return await request.put<Prisma.UserGetPayload<T>, true>(`${endpoint}/user/update`, args, mutate, fetch, true);
+        return await request.mutationRequest<Prisma.UserGetPayload<Prisma.UserUpdateArgs> | undefined, true>(
+            'PUT',
+            `${endpoint}/user/update`,
+            args,
+            invalidate,
+            fetch,
+            true,
+        );
     }
 
+    /** @deprecated Use `useUpdateManyUser` hook instead. */
     async function updateManyUser<T extends Prisma.UserUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.UserUpdateManyArgs>,
     ) {
-        return await request.put<Prisma.BatchPayload, false>(`${endpoint}/user/updateMany`, args, mutate, fetch, false);
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'PUT',
+            `${endpoint}/user/updateMany`,
+            args,
+            invalidate,
+            fetch,
+            false,
+        );
     }
 
+    /** @deprecated Use `useUpsertUser` hook instead. */
     async function upsertUser<T extends Prisma.UserUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.UserUpsertArgs>) {
-        return await request.post<Prisma.UserGetPayload<T>, true>(`${endpoint}/user/upsert`, args, mutate, fetch, true);
+        return await request.mutationRequest<Prisma.UserGetPayload<Prisma.UserUpsertArgs> | undefined, true>(
+            'POST',
+            `${endpoint}/user/upsert`,
+            args,
+            invalidate,
+            fetch,
+            true,
+        );
     }
 
+    /** @deprecated Use `useDeleteUser` hook instead. */
     async function deleteUser<T extends Prisma.UserDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>) {
-        return await request.del<Prisma.UserGetPayload<T>, true>(`${endpoint}/user/delete`, args, mutate, fetch, true);
+        return await request.mutationRequest<Prisma.UserGetPayload<Prisma.UserDeleteArgs> | undefined, true>(
+            'DELETE',
+            `${endpoint}/user/delete`,
+            args,
+            invalidate,
+            fetch,
+            true,
+        );
     }
 
+    /** @deprecated Use `useDeleteManyUser` hook instead. */
     async function deleteManyUser<T extends Prisma.UserDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.UserDeleteManyArgs>,
     ) {
-        return await request.del<Prisma.BatchPayload, false>(`${endpoint}/user/deleteMany`, args, mutate, fetch, false);
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'DELETE',
+            `${endpoint}/user/deleteMany`,
+            args,
+            invalidate,
+            fetch,
+            false,
+        );
     }
     return { createUser, createManyUser, updateUser, updateManyUser, upsertUser, deleteUser, deleteManyUser };
 }
 
+export function useCreateUser(
+    options?: MutationOptions<Prisma.UserGetPayload<Prisma.UserCreateArgs> | undefined, unknown, Prisma.UserCreateArgs>,
+) {
+    const mutation = request.useModelMutation('User', 'POST', 'create', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.UserCreateArgs>(args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.UserGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useCreateManyUser(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.UserCreateManyArgs>) {
+    const mutation = request.useModelMutation('User', 'POST', 'createMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.UserCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.UserCreateManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
 export function useFindManyUser<T extends Prisma.UserFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.UserFindManyArgs>,
-    options?: RequestOptions<Array<Prisma.UserGetPayload<T>>>,
+    options?: QueryOptions<Array<Prisma.UserGetPayload<T> & { $optimistic?: boolean }>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Array<Prisma.UserGetPayload<T>>>('User', 'findMany', endpoint, args, options, fetch);
+    return request.useModelQuery('User', 'findMany', args, options);
 }
 
 export function useInfiniteFindManyUser<T extends Prisma.UserFindManyArgs, R extends Array<Prisma.UserGetPayload<T>>>(
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.UserFindManyArgs> | undefined, R>,
-    options?: InfiniteRequestOptions<Array<Prisma.UserGetPayload<T>>>,
+    options?: InfiniteQueryOptions<Array<Prisma.UserGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useInfiniteGet<
-        Prisma.SelectSubset<T, Prisma.UserFindManyArgs> | undefined,
-        Array<Prisma.UserGetPayload<T>>
-    >('User', 'findMany', endpoint, getNextArgs, options, fetch);
+    return request.useInfiniteModelQuery('User', 'findMany', getNextArgs, options);
 }
 
 export function useFindUniqueUser<T extends Prisma.UserFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.UserFindUniqueArgs>,
-    options?: RequestOptions<Prisma.UserGetPayload<T>>,
+    options?: QueryOptions<Prisma.UserGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.UserGetPayload<T>>('User', 'findUnique', endpoint, args, options, fetch);
+    return request.useModelQuery('User', 'findUnique', args, options);
 }
 
 export function useFindFirstUser<T extends Prisma.UserFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.UserFindFirstArgs>,
-    options?: RequestOptions<Prisma.UserGetPayload<T>>,
+    options?: QueryOptions<Prisma.UserGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.UserGetPayload<T>>('User', 'findFirst', endpoint, args, options, fetch);
+    return request.useModelQuery('User', 'findFirst', args, options);
+}
+
+export function useUpdateUser(
+    options?: MutationOptions<Prisma.UserGetPayload<Prisma.UserUpdateArgs> | undefined, unknown, Prisma.UserUpdateArgs>,
+) {
+    const mutation = request.useModelMutation('User', 'PUT', 'update', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.UserUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.UserGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useUpdateManyUser(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.UserUpdateManyArgs>) {
+    const mutation = request.useModelMutation('User', 'PUT', 'updateMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.UserUpdateManyArgs>(args: Prisma.SelectSubset<T, Prisma.UserUpdateManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
+export function useUpsertUser(
+    options?: MutationOptions<Prisma.UserGetPayload<Prisma.UserUpsertArgs> | undefined, unknown, Prisma.UserUpsertArgs>,
+) {
+    const mutation = request.useModelMutation('User', 'POST', 'upsert', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.UserUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.UserUpsertArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.UserGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteUser(
+    options?: MutationOptions<Prisma.UserGetPayload<Prisma.UserDeleteArgs> | undefined, unknown, Prisma.UserDeleteArgs>,
+) {
+    const mutation = request.useModelMutation('User', 'DELETE', 'delete', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.UserDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.UserGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteManyUser(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.UserDeleteManyArgs>) {
+    const mutation = request.useModelMutation('User', 'DELETE', 'deleteMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.UserDeleteManyArgs>(args: Prisma.SelectSubset<T, Prisma.UserDeleteManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
 }
 
 export function useAggregateUser<T extends Prisma.UserAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.UserAggregateArgs>,
-    options?: RequestOptions<Prisma.GetUserAggregateType<T>>,
+    options?: QueryOptions<Prisma.GetUserAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.GetUserAggregateType<T>>('User', 'aggregate', endpoint, args, options, fetch);
+    return request.useModelQuery('User', 'aggregate', args, options);
 }
 
 export function useGroupByUser<
@@ -158,7 +271,7 @@ export function useGroupByUser<
           }[OrderFields],
 >(
     args?: Prisma.SubsetIntersection<T, Prisma.UserGroupByArgs, OrderByArg> & InputErrors,
-    options?: RequestOptions<
+    options?: QueryOptions<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.UserGroupByOutputType, T['by']> & {
@@ -172,25 +285,12 @@ export function useGroupByUser<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.UserGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.UserGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.UserGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.UserGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
-    >('User', 'groupBy', endpoint, args, options, fetch);
+    return request.useModelQuery('User', 'groupBy', args, options);
 }
 
 export function useCountUser<T extends Prisma.UserCountArgs>(
     args?: Prisma.Subset<T, Prisma.UserCountArgs>,
-    options?: RequestOptions<
+    options?: QueryOptions<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
@@ -198,12 +298,5 @@ export function useCountUser<T extends Prisma.UserCountArgs>(
             : number
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.UserCountAggregateOutputType>
-            : number
-    >('User', 'count', endpoint, args, options, fetch);
+    return request.useModelQuery('User', 'count', args, options);
 }

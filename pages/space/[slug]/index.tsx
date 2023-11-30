@@ -1,5 +1,5 @@
 import { SpaceContext, UserContext } from '@lib/context';
-import { useFindManyList, useMutateList } from '@lib/hooks';
+import { useCreateList, useFindManyList } from '@lib/hooks';
 import { List, Space, User } from '@prisma/client';
 import BreadCrumb from 'components/BreadCrumb';
 import SpaceMembers from 'components/SpaceMembers';
@@ -11,7 +11,7 @@ import { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from 
 import { toast } from 'react-toastify';
 import { getEnhancedPrisma } from 'server/enhanced-db';
 
-function CreateDialog({ created }: { created: (list: List) => void }) {
+function CreateDialog() {
     const user = useContext(UserContext);
     const space = useContext(SpaceContext);
 
@@ -19,7 +19,18 @@ function CreateDialog({ created }: { created: (list: List) => void }) {
     const [title, setTitle] = useState('');
     const [_private, setPrivate] = useState(false);
 
-    const { createList } = useMutateList();
+    const { trigger: createList } = useCreateList({
+        onSuccess: () => {
+            toast.success('List created successfully!');
+
+            // reset states
+            setTitle('');
+            setPrivate(false);
+
+            // close modal
+            setModalOpen(false);
+        },
+    });
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,35 +40,17 @@ function CreateDialog({ created }: { created: (list: List) => void }) {
         }
     }, [modalOpen]);
 
-    const onSubmit = async (event: FormEvent) => {
+    const onSubmit = (event: FormEvent) => {
         event.preventDefault();
 
-        try {
-            const list = await createList({
-                data: {
-                    title,
-                    private: _private,
-                    space: { connect: { id: space!.id } },
-                    owner: { connect: { id: user!.id } },
-                },
-            });
-
-            if (created && list) {
-                created(list);
-            }
-        } catch (err: any) {
-            toast.error(`Failed to create list: ${err.info?.message || err.message}`);
-            return;
-        }
-
-        toast.success('List created successfully!');
-
-        // reset states
-        setTitle('');
-        setPrivate(false);
-
-        // close modal
-        setModalOpen(false);
+        createList({
+            data: {
+                title,
+                private: _private,
+                space: { connect: { id: space!.id } },
+                owner: { connect: { id: user!.id } },
+            },
+        });
     };
 
     return (
@@ -124,7 +117,7 @@ type Props = {
 export default function SpaceHome(props: Props) {
     const router = useRouter();
 
-    const { data: lists, mutate: refetch } = useFindManyList(
+    const { data: lists } = useFindManyList(
         {
             where: {
                 space: {
@@ -160,12 +153,12 @@ export default function SpaceHome(props: Props) {
                 <ul className="flex flex-wrap gap-6">
                     {lists?.map((list) => (
                         <li key={list.id}>
-                            <TodoList value={list} deleted={() => refetch()} />
+                            <TodoList value={list} />
                         </li>
                     ))}
                 </ul>
 
-                <CreateDialog created={() => refetch()} />
+                <CreateDialog />
             </div>
         </WithNavBar>
     );

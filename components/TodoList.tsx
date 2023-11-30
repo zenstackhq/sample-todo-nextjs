@@ -1,5 +1,5 @@
 import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useMutateList } from '@lib/hooks';
+import { useDeleteList } from '@lib/hooks';
 import { List } from '@prisma/client';
 import { customAlphabet } from 'nanoid';
 import { User } from 'next-auth';
@@ -14,17 +14,14 @@ type Props = {
     deleted?: (value: List) => void;
 };
 
-export default function TodoList({ value, deleted }: Props) {
+export default function TodoList({ value }: Props) {
     const router = useRouter();
 
-    const { deleteList } = useMutateList();
+    const { trigger: deleteList } = useDeleteList();
 
-    const onDeleteList = async () => {
+    const onDeleteList = () => {
         if (confirm('Are you sure to delete this list?')) {
-            await deleteList({ where: { id: value.id } });
-            if (deleted) {
-                deleted(value);
-            }
+            deleteList({ where: { id: value.id } });
         }
     };
 

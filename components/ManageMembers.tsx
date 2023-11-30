@@ -1,6 +1,6 @@
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useCurrentUser } from '@lib/context';
-import { useFindManySpaceUser, useMutateSpaceUser } from '@lib/hooks';
+import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from '@lib/hooks';
 import { Space, SpaceUserRole } from '@prisma/client';
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -14,7 +14,8 @@ export default function ManageMembers({ space }: Props) {
     const [email, setEmail] = useState('');
     const [role, setRole] = useState<SpaceUserRole>(SpaceUserRole.USER);
     const user = useCurrentUser();
-    const { createSpaceUser, deleteSpaceUser } = useMutateSpaceUser();
+    const { trigger: createSpaceUser } = useCreateSpaceUser();
+    const { trigger: deleteSpaceUser } = useDeleteSpaceUser();
 
     const { data: members } = useFindManySpaceUser({
         where: {
@@ -62,9 +63,9 @@ export default function ManageMembers({ space }: Props) {
         }
     };
 
-    const removeMember = async (id: string) => {
+    const removeMember = (id: string) => {
         if (confirm(`Are you sure to remove this member from space?`)) {
-            await deleteSpaceUser({ where: { id } });
+            deleteSpaceUser({ where: { id } });
         }
     };
 
@@ -115,7 +116,7 @@ export default function ManageMembers({ space }: Props) {
                         <div className="flex items-center">
                             {user?.id !== member.user.id && (
                                 <TrashIcon
-                                    className="w-4 h-4 text-gray-500"
+                                    className="w-4 h-4 text-gray-500 cursor-pointer"
                                     onClick={() => {
                                         removeMember(member.id);
                                     }}

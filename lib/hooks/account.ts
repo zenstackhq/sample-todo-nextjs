@@ -1,100 +1,113 @@
 /* eslint-disable */
-import type { Prisma, Account } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import {
-    RequestHandlerContext,
     type GetNextArgs,
-    type RequestOptions,
-    type InfiniteRequestOptions,
+    type QueryOptions,
+    type InfiniteQueryOptions,
+    type MutationOptions,
     type PickEnumerable,
-    type CheckSelect,
     useHooksContext,
 } from '@zenstackhq/swr/runtime';
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateAccount() {
-    const { endpoint, fetch, logging } = useHooksContext();
-    const mutate = request.useMutate('Account', metadata, logging);
+    const { endpoint, fetch } = useHooksContext();
+    const invalidate = request.useInvalidation('Account', metadata);
 
+    /** @deprecated Use `useCreateAccount` hook instead. */
     async function createAccount<T extends Prisma.AccountCreateArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountCreateArgs>,
     ) {
-        return await request.post<CheckSelect<T, Account, Prisma.AccountGetPayload<T>>, true>(
+        return await request.mutationRequest<Prisma.AccountGetPayload<Prisma.AccountCreateArgs> | undefined, true>(
+            'POST',
             `${endpoint}/account/create`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useCreateManyAccount` hook instead. */
     async function createManyAccount<T extends Prisma.AccountCreateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountCreateManyArgs>,
     ) {
-        return await request.post<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'POST',
             `${endpoint}/account/createMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
     }
 
+    /** @deprecated Use `useUpdateAccount` hook instead. */
     async function updateAccount<T extends Prisma.AccountUpdateArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>,
     ) {
-        return await request.put<Prisma.AccountGetPayload<T>, true>(
+        return await request.mutationRequest<Prisma.AccountGetPayload<Prisma.AccountUpdateArgs> | undefined, true>(
+            'PUT',
             `${endpoint}/account/update`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useUpdateManyAccount` hook instead. */
     async function updateManyAccount<T extends Prisma.AccountUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountUpdateManyArgs>,
     ) {
-        return await request.put<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'PUT',
             `${endpoint}/account/updateMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
     }
 
+    /** @deprecated Use `useUpsertAccount` hook instead. */
     async function upsertAccount<T extends Prisma.AccountUpsertArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>,
     ) {
-        return await request.post<Prisma.AccountGetPayload<T>, true>(
+        return await request.mutationRequest<Prisma.AccountGetPayload<Prisma.AccountUpsertArgs> | undefined, true>(
+            'POST',
             `${endpoint}/account/upsert`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useDeleteAccount` hook instead. */
     async function deleteAccount<T extends Prisma.AccountDeleteArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountDeleteArgs>,
     ) {
-        return await request.del<Prisma.AccountGetPayload<T>, true>(
+        return await request.mutationRequest<Prisma.AccountGetPayload<Prisma.AccountDeleteArgs> | undefined, true>(
+            'DELETE',
             `${endpoint}/account/delete`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useDeleteManyAccount` hook instead. */
     async function deleteManyAccount<T extends Prisma.AccountDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.AccountDeleteManyArgs>,
     ) {
-        return await request.del<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'DELETE',
             `${endpoint}/account/deleteMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
@@ -110,12 +123,39 @@ export function useMutateAccount() {
     };
 }
 
+export function useCreateAccount(
+    options?: MutationOptions<
+        Prisma.AccountGetPayload<Prisma.AccountCreateArgs> | undefined,
+        unknown,
+        Prisma.AccountCreateArgs
+    >,
+) {
+    const mutation = request.useModelMutation('Account', 'POST', 'create', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.AccountCreateArgs>(args: Prisma.SelectSubset<T, Prisma.AccountCreateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.AccountGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useCreateManyAccount(
+    options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.AccountCreateManyArgs>,
+) {
+    const mutation = request.useModelMutation('Account', 'POST', 'createMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.AccountCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.AccountCreateManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
 export function useFindManyAccount<T extends Prisma.AccountFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindManyArgs>,
-    options?: RequestOptions<Array<Prisma.AccountGetPayload<T>>>,
+    options?: QueryOptions<Array<Prisma.AccountGetPayload<T> & { $optimistic?: boolean }>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Array<Prisma.AccountGetPayload<T>>>('Account', 'findMany', endpoint, args, options, fetch);
+    return request.useModelQuery('Account', 'findMany', args, options);
 }
 
 export function useInfiniteFindManyAccount<
@@ -123,37 +163,102 @@ export function useInfiniteFindManyAccount<
     R extends Array<Prisma.AccountGetPayload<T>>,
 >(
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.AccountFindManyArgs> | undefined, R>,
-    options?: InfiniteRequestOptions<Array<Prisma.AccountGetPayload<T>>>,
+    options?: InfiniteQueryOptions<Array<Prisma.AccountGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useInfiniteGet<
-        Prisma.SelectSubset<T, Prisma.AccountFindManyArgs> | undefined,
-        Array<Prisma.AccountGetPayload<T>>
-    >('Account', 'findMany', endpoint, getNextArgs, options, fetch);
+    return request.useInfiniteModelQuery('Account', 'findMany', getNextArgs, options);
 }
 
 export function useFindUniqueAccount<T extends Prisma.AccountFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindUniqueArgs>,
-    options?: RequestOptions<Prisma.AccountGetPayload<T>>,
+    options?: QueryOptions<Prisma.AccountGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.AccountGetPayload<T>>('Account', 'findUnique', endpoint, args, options, fetch);
+    return request.useModelQuery('Account', 'findUnique', args, options);
 }
 
 export function useFindFirstAccount<T extends Prisma.AccountFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindFirstArgs>,
-    options?: RequestOptions<Prisma.AccountGetPayload<T>>,
+    options?: QueryOptions<Prisma.AccountGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.AccountGetPayload<T>>('Account', 'findFirst', endpoint, args, options, fetch);
+    return request.useModelQuery('Account', 'findFirst', args, options);
+}
+
+export function useUpdateAccount(
+    options?: MutationOptions<
+        Prisma.AccountGetPayload<Prisma.AccountUpdateArgs> | undefined,
+        unknown,
+        Prisma.AccountUpdateArgs
+    >,
+) {
+    const mutation = request.useModelMutation('Account', 'PUT', 'update', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.AccountUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.AccountGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useUpdateManyAccount(
+    options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.AccountUpdateManyArgs>,
+) {
+    const mutation = request.useModelMutation('Account', 'PUT', 'updateMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.AccountUpdateManyArgs>(args: Prisma.SelectSubset<T, Prisma.AccountUpdateManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
+export function useUpsertAccount(
+    options?: MutationOptions<
+        Prisma.AccountGetPayload<Prisma.AccountUpsertArgs> | undefined,
+        unknown,
+        Prisma.AccountUpsertArgs
+    >,
+) {
+    const mutation = request.useModelMutation('Account', 'POST', 'upsert', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.AccountUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.AccountGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteAccount(
+    options?: MutationOptions<
+        Prisma.AccountGetPayload<Prisma.AccountDeleteArgs> | undefined,
+        unknown,
+        Prisma.AccountDeleteArgs
+    >,
+) {
+    const mutation = request.useModelMutation('Account', 'DELETE', 'delete', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.AccountDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.AccountDeleteArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.AccountGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteManyAccount(
+    options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.AccountDeleteManyArgs>,
+) {
+    const mutation = request.useModelMutation('Account', 'DELETE', 'deleteMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.AccountDeleteManyArgs>(args: Prisma.SelectSubset<T, Prisma.AccountDeleteManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
 }
 
 export function useAggregateAccount<T extends Prisma.AccountAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.AccountAggregateArgs>,
-    options?: RequestOptions<Prisma.GetAccountAggregateType<T>>,
+    options?: QueryOptions<Prisma.GetAccountAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.GetAccountAggregateType<T>>('Account', 'aggregate', endpoint, args, options, fetch);
+    return request.useModelQuery('Account', 'aggregate', args, options);
 }
 
 export function useGroupByAccount<
@@ -207,7 +312,7 @@ export function useGroupByAccount<
           }[OrderFields],
 >(
     args?: Prisma.SubsetIntersection<T, Prisma.AccountGroupByArgs, OrderByArg> & InputErrors,
-    options?: RequestOptions<
+    options?: QueryOptions<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.AccountGroupByOutputType, T['by']> & {
@@ -221,25 +326,12 @@ export function useGroupByAccount<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.AccountGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.AccountGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
-    >('Account', 'groupBy', endpoint, args, options, fetch);
+    return request.useModelQuery('Account', 'groupBy', args, options);
 }
 
 export function useCountAccount<T extends Prisma.AccountCountArgs>(
     args?: Prisma.Subset<T, Prisma.AccountCountArgs>,
-    options?: RequestOptions<
+    options?: QueryOptions<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
@@ -247,12 +339,5 @@ export function useCountAccount<T extends Prisma.AccountCountArgs>(
             : number
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.AccountCountAggregateOutputType>
-            : number
-    >('Account', 'count', endpoint, args, options, fetch);
+    return request.useModelQuery('Account', 'count', args, options);
 }

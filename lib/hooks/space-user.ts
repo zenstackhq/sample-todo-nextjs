@@ -1,100 +1,113 @@
 /* eslint-disable */
-import type { Prisma, SpaceUser } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import {
-    RequestHandlerContext,
     type GetNextArgs,
-    type RequestOptions,
-    type InfiniteRequestOptions,
+    type QueryOptions,
+    type InfiniteQueryOptions,
+    type MutationOptions,
     type PickEnumerable,
-    type CheckSelect,
     useHooksContext,
 } from '@zenstackhq/swr/runtime';
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateSpaceUser() {
-    const { endpoint, fetch, logging } = useHooksContext();
-    const mutate = request.useMutate('SpaceUser', metadata, logging);
+    const { endpoint, fetch } = useHooksContext();
+    const invalidate = request.useInvalidation('SpaceUser', metadata);
 
+    /** @deprecated Use `useCreateSpaceUser` hook instead. */
     async function createSpaceUser<T extends Prisma.SpaceUserCreateArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceUserCreateArgs>,
     ) {
-        return await request.post<CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>, true>(
+        return await request.mutationRequest<Prisma.SpaceUserGetPayload<Prisma.SpaceUserCreateArgs> | undefined, true>(
+            'POST',
             `${endpoint}/spaceUser/create`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useCreateManySpaceUser` hook instead. */
     async function createManySpaceUser<T extends Prisma.SpaceUserCreateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceUserCreateManyArgs>,
     ) {
-        return await request.post<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'POST',
             `${endpoint}/spaceUser/createMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
     }
 
+    /** @deprecated Use `useUpdateSpaceUser` hook instead. */
     async function updateSpaceUser<T extends Prisma.SpaceUserUpdateArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceUserUpdateArgs>,
     ) {
-        return await request.put<Prisma.SpaceUserGetPayload<T>, true>(
+        return await request.mutationRequest<Prisma.SpaceUserGetPayload<Prisma.SpaceUserUpdateArgs> | undefined, true>(
+            'PUT',
             `${endpoint}/spaceUser/update`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useUpdateManySpaceUser` hook instead. */
     async function updateManySpaceUser<T extends Prisma.SpaceUserUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceUserUpdateManyArgs>,
     ) {
-        return await request.put<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'PUT',
             `${endpoint}/spaceUser/updateMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
     }
 
+    /** @deprecated Use `useUpsertSpaceUser` hook instead. */
     async function upsertSpaceUser<T extends Prisma.SpaceUserUpsertArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>,
     ) {
-        return await request.post<Prisma.SpaceUserGetPayload<T>, true>(
+        return await request.mutationRequest<Prisma.SpaceUserGetPayload<Prisma.SpaceUserUpsertArgs> | undefined, true>(
+            'POST',
             `${endpoint}/spaceUser/upsert`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useDeleteSpaceUser` hook instead. */
     async function deleteSpaceUser<T extends Prisma.SpaceUserDeleteArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceUserDeleteArgs>,
     ) {
-        return await request.del<Prisma.SpaceUserGetPayload<T>, true>(
+        return await request.mutationRequest<Prisma.SpaceUserGetPayload<Prisma.SpaceUserDeleteArgs> | undefined, true>(
+            'DELETE',
             `${endpoint}/spaceUser/delete`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useDeleteManySpaceUser` hook instead. */
     async function deleteManySpaceUser<T extends Prisma.SpaceUserDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.SpaceUserDeleteManyArgs>,
     ) {
-        return await request.del<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'DELETE',
             `${endpoint}/spaceUser/deleteMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
@@ -110,19 +123,41 @@ export function useMutateSpaceUser() {
     };
 }
 
+export function useCreateSpaceUser(
+    options?: MutationOptions<
+        Prisma.SpaceUserGetPayload<Prisma.SpaceUserCreateArgs> | undefined,
+        unknown,
+        Prisma.SpaceUserCreateArgs
+    >,
+) {
+    const mutation = request.useModelMutation('SpaceUser', 'POST', 'create', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.SpaceUserCreateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserCreateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.SpaceUserGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useCreateManySpaceUser(
+    options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceUserCreateManyArgs>,
+) {
+    const mutation = request.useModelMutation('SpaceUser', 'POST', 'createMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.SpaceUserCreateManyArgs>(
+            args: Prisma.SelectSubset<T, Prisma.SpaceUserCreateManyArgs>,
+        ) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
 export function useFindManySpaceUser<T extends Prisma.SpaceUserFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceUserFindManyArgs>,
-    options?: RequestOptions<Array<Prisma.SpaceUserGetPayload<T>>>,
+    options?: QueryOptions<Array<Prisma.SpaceUserGetPayload<T> & { $optimistic?: boolean }>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Array<Prisma.SpaceUserGetPayload<T>>>(
-        'SpaceUser',
-        'findMany',
-        endpoint,
-        args,
-        options,
-        fetch,
-    );
+    return request.useModelQuery('SpaceUser', 'findMany', args, options);
 }
 
 export function useInfiniteFindManySpaceUser<
@@ -130,44 +165,106 @@ export function useInfiniteFindManySpaceUser<
     R extends Array<Prisma.SpaceUserGetPayload<T>>,
 >(
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.SpaceUserFindManyArgs> | undefined, R>,
-    options?: InfiniteRequestOptions<Array<Prisma.SpaceUserGetPayload<T>>>,
+    options?: InfiniteQueryOptions<Array<Prisma.SpaceUserGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useInfiniteGet<
-        Prisma.SelectSubset<T, Prisma.SpaceUserFindManyArgs> | undefined,
-        Array<Prisma.SpaceUserGetPayload<T>>
-    >('SpaceUser', 'findMany', endpoint, getNextArgs, options, fetch);
+    return request.useInfiniteModelQuery('SpaceUser', 'findMany', getNextArgs, options);
 }
 
 export function useFindUniqueSpaceUser<T extends Prisma.SpaceUserFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceUserFindUniqueArgs>,
-    options?: RequestOptions<Prisma.SpaceUserGetPayload<T>>,
+    options?: QueryOptions<Prisma.SpaceUserGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.SpaceUserGetPayload<T>>('SpaceUser', 'findUnique', endpoint, args, options, fetch);
+    return request.useModelQuery('SpaceUser', 'findUnique', args, options);
 }
 
 export function useFindFirstSpaceUser<T extends Prisma.SpaceUserFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceUserFindFirstArgs>,
-    options?: RequestOptions<Prisma.SpaceUserGetPayload<T>>,
+    options?: QueryOptions<Prisma.SpaceUserGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.SpaceUserGetPayload<T>>('SpaceUser', 'findFirst', endpoint, args, options, fetch);
+    return request.useModelQuery('SpaceUser', 'findFirst', args, options);
+}
+
+export function useUpdateSpaceUser(
+    options?: MutationOptions<
+        Prisma.SpaceUserGetPayload<Prisma.SpaceUserUpdateArgs> | undefined,
+        unknown,
+        Prisma.SpaceUserUpdateArgs
+    >,
+) {
+    const mutation = request.useModelMutation('SpaceUser', 'PUT', 'update', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.SpaceUserUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserUpdateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.SpaceUserGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useUpdateManySpaceUser(
+    options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceUserUpdateManyArgs>,
+) {
+    const mutation = request.useModelMutation('SpaceUser', 'PUT', 'updateMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.SpaceUserUpdateManyArgs>(
+            args: Prisma.SelectSubset<T, Prisma.SpaceUserUpdateManyArgs>,
+        ) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
+export function useUpsertSpaceUser(
+    options?: MutationOptions<
+        Prisma.SpaceUserGetPayload<Prisma.SpaceUserUpsertArgs> | undefined,
+        unknown,
+        Prisma.SpaceUserUpsertArgs
+    >,
+) {
+    const mutation = request.useModelMutation('SpaceUser', 'POST', 'upsert', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.SpaceUserUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.SpaceUserGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteSpaceUser(
+    options?: MutationOptions<
+        Prisma.SpaceUserGetPayload<Prisma.SpaceUserDeleteArgs> | undefined,
+        unknown,
+        Prisma.SpaceUserDeleteArgs
+    >,
+) {
+    const mutation = request.useModelMutation('SpaceUser', 'DELETE', 'delete', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.SpaceUserDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserDeleteArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.SpaceUserGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteManySpaceUser(
+    options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceUserDeleteManyArgs>,
+) {
+    const mutation = request.useModelMutation('SpaceUser', 'DELETE', 'deleteMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.SpaceUserDeleteManyArgs>(
+            args: Prisma.SelectSubset<T, Prisma.SpaceUserDeleteManyArgs>,
+        ) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
 }
 
 export function useAggregateSpaceUser<T extends Prisma.SpaceUserAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.SpaceUserAggregateArgs>,
-    options?: RequestOptions<Prisma.GetSpaceUserAggregateType<T>>,
+    options?: QueryOptions<Prisma.GetSpaceUserAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.GetSpaceUserAggregateType<T>>(
-        'SpaceUser',
-        'aggregate',
-        endpoint,
-        args,
-        options,
-        fetch,
-    );
+    return request.useModelQuery('SpaceUser', 'aggregate', args, options);
 }
 
 export function useGroupBySpaceUser<
@@ -221,7 +318,7 @@ export function useGroupBySpaceUser<
           }[OrderFields],
 >(
     args?: Prisma.SubsetIntersection<T, Prisma.SpaceUserGroupByArgs, OrderByArg> & InputErrors,
-    options?: RequestOptions<
+    options?: QueryOptions<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.SpaceUserGroupByOutputType, T['by']> & {
@@ -235,25 +332,12 @@ export function useGroupBySpaceUser<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.SpaceUserGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.SpaceUserGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.SpaceUserGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.SpaceUserGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
-    >('SpaceUser', 'groupBy', endpoint, args, options, fetch);
+    return request.useModelQuery('SpaceUser', 'groupBy', args, options);
 }
 
 export function useCountSpaceUser<T extends Prisma.SpaceUserCountArgs>(
     args?: Prisma.Subset<T, Prisma.SpaceUserCountArgs>,
-    options?: RequestOptions<
+    options?: QueryOptions<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
@@ -261,12 +345,5 @@ export function useCountSpaceUser<T extends Prisma.SpaceUserCountArgs>(
             : number
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.SpaceUserCountAggregateOutputType>
-            : number
-    >('SpaceUser', 'count', endpoint, args, options, fetch);
+    return request.useModelQuery('SpaceUser', 'count', args, options);
 }

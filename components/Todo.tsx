@@ -1,5 +1,5 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { useMutateTodo } from '@lib/hooks';
+import { useDeleteTodo, useUpdateTodo } from '@lib/hooks';
 import { Todo, User } from '@prisma/client';
 import { ChangeEvent } from 'react';
 import Avatar from './Avatar';
@@ -7,31 +7,25 @@ import TimeInfo from './TimeInfo';
 
 type Props = {
     value: Todo & { owner: User };
-    updated?: (value: Todo) => any;
-    deleted?: (value: Todo) => any;
+    optimistic?: boolean;
 };
 
-export default function TodoComponent({ value, updated, deleted }: Props) {
-    const { updateTodo, deleteTodo } = useMutateTodo();
+export default function TodoComponent({ value, optimistic }: Props) {
+    const { trigger: updateTodo } = useUpdateTodo({ optimisticUpdate: true });
+    const { trigger: deleteTodo } = useDeleteTodo({ optimisticUpdate: true });
 
     const onDeleteTodo = async () => {
-        await deleteTodo({ where: { id: value.id } });
-        if (deleted) {
-            deleted(value);
-        }
+        deleteTodo({ where: { id: value.id } });
     };
 
     const toggleCompleted = async (completed: boolean) => {
         if (completed === !!value.completedAt) {
             return;
         }
-        const newValue = await updateTodo({
+        updateTodo({
             where: { id: value.id },
             data: { completedAt: completed ? new Date() : null },
         });
-        if (updated && newValue) {
-            updated(newValue);
-        }
     };
 
     return (
@@ -43,18 +37,22 @@ export default function TodoComponent({ value, updated, deleted }: Props) {
                     }`}
                 >
                     {value.title}
+                    {optimistic && <span className="loading loading-spinner loading-sm ml-1"></span>}
                 </h3>
                 <div className="flex">
                     <input
                         type="checkbox"
                         className="checkbox mr-2"
                         checked={!!value.completedAt}
+                        disabled={optimistic}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => toggleCompleted(e.currentTarget.checked)}
                     />
                     <TrashIcon
-                        className="w-6 h-6 text-gray-500 cursor-pointer"
+                        className={`w-6 h-6 ${
+                            optimistic ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 cursor-pointer'
+                        }`}
                         onClick={() => {
-                            onDeleteTodo();
+                            !optimistic && onDeleteTodo();
                         }}
                     />
                 </div>

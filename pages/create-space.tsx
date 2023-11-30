@@ -1,4 +1,4 @@
-import { useMutateSpace } from '@lib/hooks';
+import { useCreateSpace } from '@lib/hooks';
 import { SpaceUserRole } from '@prisma/client';
 import WithNavBar from 'components/WithNavBar';
 import { NextPage } from 'next';
@@ -12,7 +12,7 @@ const CreateSpace: NextPage = () => {
     const [name, setName] = useState('');
     const [slug, setSlug] = useState('');
 
-    const { createSpace } = useMutateSpace();
+    const { trigger: createSpace } = useCreateSpace();
     const router = useRouter();
 
     const onSubmit = async (event: FormEvent) => {
@@ -33,7 +33,7 @@ const CreateSpace: NextPage = () => {
                 },
             });
             console.log('Space created:', space);
-            toast.success("Space created successfull! You'll be redirected.");
+            toast.success("Space created successfully! You'll be redirected.");
 
             setTimeout(() => {
                 if (space) {
@@ -96,7 +96,13 @@ const CreateSpace: NextPage = () => {
                             value="Create"
                             className="btn btn-primary px-8"
                         />
-                        <button className="btn btn-outline" onClick={() => router.push('/')}>
+                        <button
+                            className="btn btn-outline"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                router.push('/');
+                            }}
+                        >
                             Cancel
                         </button>
                     </div>

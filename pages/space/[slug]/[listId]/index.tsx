@@ -1,13 +1,12 @@
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useCurrentUser } from '@lib/context';
-import { useInfiniteFindManyTodo, useMutateTodo } from '@lib/hooks';
+import { useCreateTodo, useFindManyTodo } from '@lib/hooks';
 import { List, Space } from '@prisma/client';
 import BreadCrumb from 'components/BreadCrumb';
 import TodoComponent from 'components/Todo';
 import WithNavBar from 'components/WithNavBar';
 import { GetServerSideProps } from 'next';
-import React, { ChangeEvent, KeyboardEvent, useState } from 'react';
-import { toast } from 'react-toastify';
+import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { getEnhancedPrisma } from 'server/enhanced-db';
 
 type Props = {
@@ -15,58 +14,33 @@ type Props = {
     list: List;
 };
 
-const PAGE_SIZE = 5;
-
 export default function TodoList(props: Props) {
     const user = useCurrentUser();
     const [title, setTitle] = useState('');
-    const { createTodo } = useMutateTodo();
+    const { trigger: createTodo } = useCreateTodo({ optimisticUpdate: true });
 
-    const {
-        data: pages,
-        mutate: refetch,
-        size,
-        setSize,
-    } = useInfiniteFindManyTodo(
-        (pageIndex, previousPageData) => {
-            if (previousPageData && !previousPageData.length) {
-                return null;
-            }
-            return {
-                where: { listId: props.list.id },
-                include: {
-                    owner: true,
-                },
-                orderBy: {
-                    createdAt: 'desc',
-                },
-                take: PAGE_SIZE,
-                skip: pageIndex * PAGE_SIZE,
-            };
-        },
+    const { data: todos } = useFindManyTodo(
         {
-            disabled: !props.list,
-        }
+            where: { listId: props.list.id },
+            include: {
+                owner: true,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        },
+        { keepPreviousData: true }
     );
 
-    const isEmpty = pages?.[0]?.length === 0;
-    const isReachingEnd = isEmpty || (pages && pages[pages.length - 1].length < PAGE_SIZE);
-
-    const _createTodo = async () => {
-        try {
-            const todo = await createTodo({
-                data: {
-                    title,
-                    owner: { connect: { id: user!.id } },
-                    list: { connect: { id: props.list.id } },
-                },
-            });
-            console.log(`Todo created: ${todo}`);
-            setTitle('');
-            refetch();
-        } catch (err: any) {
-            toast.error(`Failed to create todo: ${err.info?.message || err.message}`);
-        }
+    const _createTodo = () => {
+        createTodo({
+            data: {
+                title,
+                owner: { connect: { id: user!.id } },
+                list: { connect: { id: props.list.id } },
+            },
+        });
+        setTitle('');
     };
 
     if (!props.space || !props.list) {
@@ -100,32 +74,11 @@ export default function TodoList(props: Props) {
                     </button>
                 </div>
 
-                {isEmpty && <p className="py-4">No items found.</p>}
-
                 <ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
-                    {pages?.map((todos, index) => (
-                        <React.Fragment key={index}>
-                            {todos.map((todo) => (
-                                <TodoComponent
-                                    key={todo.id}
-                                    value={todo}
-                                    updated={() => {
-                                        refetch();
-                                    }}
-                                    deleted={() => {
-                                        refetch();
-                                    }}
-                                />
-                            ))}
-                        </React.Fragment>
+                    {todos?.map((todo) => (
+                        <TodoComponent key={todo.id} value={todo} optimistic={todo.$optimistic} />
                     ))}
                 </ul>
-
-                {!isReachingEnd && (
-                    <button className="btn btn-sm btn-ghost" onClick={() => setSize(size + 1)}>
-                        Load more
-                    </button>
-                )}
             </div>
         </WithNavBar>
     );

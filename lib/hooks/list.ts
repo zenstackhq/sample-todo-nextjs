@@ -1,110 +1,223 @@
 /* eslint-disable */
-import type { Prisma, List } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import {
-    RequestHandlerContext,
     type GetNextArgs,
-    type RequestOptions,
-    type InfiniteRequestOptions,
+    type QueryOptions,
+    type InfiniteQueryOptions,
+    type MutationOptions,
     type PickEnumerable,
-    type CheckSelect,
     useHooksContext,
 } from '@zenstackhq/swr/runtime';
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateList() {
-    const { endpoint, fetch, logging } = useHooksContext();
-    const mutate = request.useMutate('List', metadata, logging);
+    const { endpoint, fetch } = useHooksContext();
+    const invalidate = request.useInvalidation('List', metadata);
 
+    /** @deprecated Use `useCreateList` hook instead. */
     async function createList<T extends Prisma.ListCreateArgs>(args: Prisma.SelectSubset<T, Prisma.ListCreateArgs>) {
-        return await request.post<CheckSelect<T, List, Prisma.ListGetPayload<T>>, true>(
+        return await request.mutationRequest<Prisma.ListGetPayload<Prisma.ListCreateArgs> | undefined, true>(
+            'POST',
             `${endpoint}/list/create`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useCreateManyList` hook instead. */
     async function createManyList<T extends Prisma.ListCreateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.ListCreateManyArgs>,
     ) {
-        return await request.post<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'POST',
             `${endpoint}/list/createMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
     }
 
+    /** @deprecated Use `useUpdateList` hook instead. */
     async function updateList<T extends Prisma.ListUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.ListUpdateArgs>) {
-        return await request.put<Prisma.ListGetPayload<T>, true>(`${endpoint}/list/update`, args, mutate, fetch, true);
+        return await request.mutationRequest<Prisma.ListGetPayload<Prisma.ListUpdateArgs> | undefined, true>(
+            'PUT',
+            `${endpoint}/list/update`,
+            args,
+            invalidate,
+            fetch,
+            true,
+        );
     }
 
+    /** @deprecated Use `useUpdateManyList` hook instead. */
     async function updateManyList<T extends Prisma.ListUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.ListUpdateManyArgs>,
     ) {
-        return await request.put<Prisma.BatchPayload, false>(`${endpoint}/list/updateMany`, args, mutate, fetch, false);
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'PUT',
+            `${endpoint}/list/updateMany`,
+            args,
+            invalidate,
+            fetch,
+            false,
+        );
     }
 
+    /** @deprecated Use `useUpsertList` hook instead. */
     async function upsertList<T extends Prisma.ListUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.ListUpsertArgs>) {
-        return await request.post<Prisma.ListGetPayload<T>, true>(`${endpoint}/list/upsert`, args, mutate, fetch, true);
+        return await request.mutationRequest<Prisma.ListGetPayload<Prisma.ListUpsertArgs> | undefined, true>(
+            'POST',
+            `${endpoint}/list/upsert`,
+            args,
+            invalidate,
+            fetch,
+            true,
+        );
     }
 
+    /** @deprecated Use `useDeleteList` hook instead. */
     async function deleteList<T extends Prisma.ListDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.ListDeleteArgs>) {
-        return await request.del<Prisma.ListGetPayload<T>, true>(`${endpoint}/list/delete`, args, mutate, fetch, true);
+        return await request.mutationRequest<Prisma.ListGetPayload<Prisma.ListDeleteArgs> | undefined, true>(
+            'DELETE',
+            `${endpoint}/list/delete`,
+            args,
+            invalidate,
+            fetch,
+            true,
+        );
     }
 
+    /** @deprecated Use `useDeleteManyList` hook instead. */
     async function deleteManyList<T extends Prisma.ListDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.ListDeleteManyArgs>,
     ) {
-        return await request.del<Prisma.BatchPayload, false>(`${endpoint}/list/deleteMany`, args, mutate, fetch, false);
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'DELETE',
+            `${endpoint}/list/deleteMany`,
+            args,
+            invalidate,
+            fetch,
+            false,
+        );
     }
     return { createList, createManyList, updateList, updateManyList, upsertList, deleteList, deleteManyList };
 }
 
+export function useCreateList(
+    options?: MutationOptions<Prisma.ListGetPayload<Prisma.ListCreateArgs> | undefined, unknown, Prisma.ListCreateArgs>,
+) {
+    const mutation = request.useModelMutation('List', 'POST', 'create', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.ListCreateArgs>(args: Prisma.SelectSubset<T, Prisma.ListCreateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.ListGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useCreateManyList(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.ListCreateManyArgs>) {
+    const mutation = request.useModelMutation('List', 'POST', 'createMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.ListCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.ListCreateManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
 export function useFindManyList<T extends Prisma.ListFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindManyArgs>,
-    options?: RequestOptions<Array<Prisma.ListGetPayload<T>>>,
+    options?: QueryOptions<Array<Prisma.ListGetPayload<T> & { $optimistic?: boolean }>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Array<Prisma.ListGetPayload<T>>>('List', 'findMany', endpoint, args, options, fetch);
+    return request.useModelQuery('List', 'findMany', args, options);
 }
 
 export function useInfiniteFindManyList<T extends Prisma.ListFindManyArgs, R extends Array<Prisma.ListGetPayload<T>>>(
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.ListFindManyArgs> | undefined, R>,
-    options?: InfiniteRequestOptions<Array<Prisma.ListGetPayload<T>>>,
+    options?: InfiniteQueryOptions<Array<Prisma.ListGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useInfiniteGet<
-        Prisma.SelectSubset<T, Prisma.ListFindManyArgs> | undefined,
-        Array<Prisma.ListGetPayload<T>>
-    >('List', 'findMany', endpoint, getNextArgs, options, fetch);
+    return request.useInfiniteModelQuery('List', 'findMany', getNextArgs, options);
 }
 
 export function useFindUniqueList<T extends Prisma.ListFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindUniqueArgs>,
-    options?: RequestOptions<Prisma.ListGetPayload<T>>,
+    options?: QueryOptions<Prisma.ListGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.ListGetPayload<T>>('List', 'findUnique', endpoint, args, options, fetch);
+    return request.useModelQuery('List', 'findUnique', args, options);
 }
 
 export function useFindFirstList<T extends Prisma.ListFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindFirstArgs>,
-    options?: RequestOptions<Prisma.ListGetPayload<T>>,
+    options?: QueryOptions<Prisma.ListGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.ListGetPayload<T>>('List', 'findFirst', endpoint, args, options, fetch);
+    return request.useModelQuery('List', 'findFirst', args, options);
+}
+
+export function useUpdateList(
+    options?: MutationOptions<Prisma.ListGetPayload<Prisma.ListUpdateArgs> | undefined, unknown, Prisma.ListUpdateArgs>,
+) {
+    const mutation = request.useModelMutation('List', 'PUT', 'update', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.ListUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.ListUpdateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.ListGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useUpdateManyList(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.ListUpdateManyArgs>) {
+    const mutation = request.useModelMutation('List', 'PUT', 'updateMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.ListUpdateManyArgs>(args: Prisma.SelectSubset<T, Prisma.ListUpdateManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
+export function useUpsertList(
+    options?: MutationOptions<Prisma.ListGetPayload<Prisma.ListUpsertArgs> | undefined, unknown, Prisma.ListUpsertArgs>,
+) {
+    const mutation = request.useModelMutation('List', 'POST', 'upsert', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.ListUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.ListUpsertArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.ListGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteList(
+    options?: MutationOptions<Prisma.ListGetPayload<Prisma.ListDeleteArgs> | undefined, unknown, Prisma.ListDeleteArgs>,
+) {
+    const mutation = request.useModelMutation('List', 'DELETE', 'delete', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.ListDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.ListDeleteArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.ListGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteManyList(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.ListDeleteManyArgs>) {
+    const mutation = request.useModelMutation('List', 'DELETE', 'deleteMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.ListDeleteManyArgs>(args: Prisma.SelectSubset<T, Prisma.ListDeleteManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
 }
 
 export function useAggregateList<T extends Prisma.ListAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.ListAggregateArgs>,
-    options?: RequestOptions<Prisma.GetListAggregateType<T>>,
+    options?: QueryOptions<Prisma.GetListAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.GetListAggregateType<T>>('List', 'aggregate', endpoint, args, options, fetch);
+    return request.useModelQuery('List', 'aggregate', args, options);
 }
 
 export function useGroupByList<
@@ -158,7 +271,7 @@ export function useGroupByList<
           }[OrderFields],
 >(
     args?: Prisma.SubsetIntersection<T, Prisma.ListGroupByArgs, OrderByArg> & InputErrors,
-    options?: RequestOptions<
+    options?: QueryOptions<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.ListGroupByOutputType, T['by']> & {
@@ -172,25 +285,12 @@ export function useGroupByList<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.ListGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.ListGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
-    >('List', 'groupBy', endpoint, args, options, fetch);
+    return request.useModelQuery('List', 'groupBy', args, options);
 }
 
 export function useCountList<T extends Prisma.ListCountArgs>(
     args?: Prisma.Subset<T, Prisma.ListCountArgs>,
-    options?: RequestOptions<
+    options?: QueryOptions<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
@@ -198,12 +298,5 @@ export function useCountList<T extends Prisma.ListCountArgs>(
             : number
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType>
-            : number
-    >('List', 'count', endpoint, args, options, fetch);
+    return request.useModelQuery('List', 'count', args, options);
 }

@@ -1,110 +1,223 @@
 /* eslint-disable */
-import type { Prisma, Todo } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import {
-    RequestHandlerContext,
     type GetNextArgs,
-    type RequestOptions,
-    type InfiniteRequestOptions,
+    type QueryOptions,
+    type InfiniteQueryOptions,
+    type MutationOptions,
     type PickEnumerable,
-    type CheckSelect,
     useHooksContext,
 } from '@zenstackhq/swr/runtime';
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateTodo() {
-    const { endpoint, fetch, logging } = useHooksContext();
-    const mutate = request.useMutate('Todo', metadata, logging);
+    const { endpoint, fetch } = useHooksContext();
+    const invalidate = request.useInvalidation('Todo', metadata);
 
+    /** @deprecated Use `useCreateTodo` hook instead. */
     async function createTodo<T extends Prisma.TodoCreateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>) {
-        return await request.post<CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>, true>(
+        return await request.mutationRequest<Prisma.TodoGetPayload<Prisma.TodoCreateArgs> | undefined, true>(
+            'POST',
             `${endpoint}/todo/create`,
             args,
-            mutate,
+            invalidate,
             fetch,
             true,
         );
     }
 
+    /** @deprecated Use `useCreateManyTodo` hook instead. */
     async function createManyTodo<T extends Prisma.TodoCreateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>,
     ) {
-        return await request.post<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'POST',
             `${endpoint}/todo/createMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
     }
 
+    /** @deprecated Use `useUpdateTodo` hook instead. */
     async function updateTodo<T extends Prisma.TodoUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>) {
-        return await request.put<Prisma.TodoGetPayload<T>, true>(`${endpoint}/todo/update`, args, mutate, fetch, true);
+        return await request.mutationRequest<Prisma.TodoGetPayload<Prisma.TodoUpdateArgs> | undefined, true>(
+            'PUT',
+            `${endpoint}/todo/update`,
+            args,
+            invalidate,
+            fetch,
+            true,
+        );
     }
 
+    /** @deprecated Use `useUpdateManyTodo` hook instead. */
     async function updateManyTodo<T extends Prisma.TodoUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>,
     ) {
-        return await request.put<Prisma.BatchPayload, false>(`${endpoint}/todo/updateMany`, args, mutate, fetch, false);
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'PUT',
+            `${endpoint}/todo/updateMany`,
+            args,
+            invalidate,
+            fetch,
+            false,
+        );
     }
 
+    /** @deprecated Use `useUpsertTodo` hook instead. */
     async function upsertTodo<T extends Prisma.TodoUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>) {
-        return await request.post<Prisma.TodoGetPayload<T>, true>(`${endpoint}/todo/upsert`, args, mutate, fetch, true);
+        return await request.mutationRequest<Prisma.TodoGetPayload<Prisma.TodoUpsertArgs> | undefined, true>(
+            'POST',
+            `${endpoint}/todo/upsert`,
+            args,
+            invalidate,
+            fetch,
+            true,
+        );
     }
 
+    /** @deprecated Use `useDeleteTodo` hook instead. */
     async function deleteTodo<T extends Prisma.TodoDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>) {
-        return await request.del<Prisma.TodoGetPayload<T>, true>(`${endpoint}/todo/delete`, args, mutate, fetch, true);
+        return await request.mutationRequest<Prisma.TodoGetPayload<Prisma.TodoDeleteArgs> | undefined, true>(
+            'DELETE',
+            `${endpoint}/todo/delete`,
+            args,
+            invalidate,
+            fetch,
+            true,
+        );
     }
 
+    /** @deprecated Use `useDeleteManyTodo` hook instead. */
     async function deleteManyTodo<T extends Prisma.TodoDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>,
     ) {
-        return await request.del<Prisma.BatchPayload, false>(`${endpoint}/todo/deleteMany`, args, mutate, fetch, false);
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'DELETE',
+            `${endpoint}/todo/deleteMany`,
+            args,
+            invalidate,
+            fetch,
+            false,
+        );
     }
     return { createTodo, createManyTodo, updateTodo, updateManyTodo, upsertTodo, deleteTodo, deleteManyTodo };
 }
 
+export function useCreateTodo(
+    options?: MutationOptions<Prisma.TodoGetPayload<Prisma.TodoCreateArgs> | undefined, unknown, Prisma.TodoCreateArgs>,
+) {
+    const mutation = request.useModelMutation('Todo', 'POST', 'create', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.TodoCreateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.TodoGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useCreateManyTodo(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoCreateManyArgs>) {
+    const mutation = request.useModelMutation('Todo', 'POST', 'createMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.TodoCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
 export function useFindManyTodo<T extends Prisma.TodoFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindManyArgs>,
-    options?: RequestOptions<Array<Prisma.TodoGetPayload<T>>>,
+    options?: QueryOptions<Array<Prisma.TodoGetPayload<T> & { $optimistic?: boolean }>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Array<Prisma.TodoGetPayload<T>>>('Todo', 'findMany', endpoint, args, options, fetch);
+    return request.useModelQuery('Todo', 'findMany', args, options);
 }
 
 export function useInfiniteFindManyTodo<T extends Prisma.TodoFindManyArgs, R extends Array<Prisma.TodoGetPayload<T>>>(
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.TodoFindManyArgs> | undefined, R>,
-    options?: InfiniteRequestOptions<Array<Prisma.TodoGetPayload<T>>>,
+    options?: InfiniteQueryOptions<Array<Prisma.TodoGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useInfiniteGet<
-        Prisma.SelectSubset<T, Prisma.TodoFindManyArgs> | undefined,
-        Array<Prisma.TodoGetPayload<T>>
-    >('Todo', 'findMany', endpoint, getNextArgs, options, fetch);
+    return request.useInfiniteModelQuery('Todo', 'findMany', getNextArgs, options);
 }
 
 export function useFindUniqueTodo<T extends Prisma.TodoFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindUniqueArgs>,
-    options?: RequestOptions<Prisma.TodoGetPayload<T>>,
+    options?: QueryOptions<Prisma.TodoGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.TodoGetPayload<T>>('Todo', 'findUnique', endpoint, args, options, fetch);
+    return request.useModelQuery('Todo', 'findUnique', args, options);
 }
 
 export function useFindFirstTodo<T extends Prisma.TodoFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindFirstArgs>,
-    options?: RequestOptions<Prisma.TodoGetPayload<T>>,
+    options?: QueryOptions<Prisma.TodoGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.TodoGetPayload<T>>('Todo', 'findFirst', endpoint, args, options, fetch);
+    return request.useModelQuery('Todo', 'findFirst', args, options);
+}
+
+export function useUpdateTodo(
+    options?: MutationOptions<Prisma.TodoGetPayload<Prisma.TodoUpdateArgs> | undefined, unknown, Prisma.TodoUpdateArgs>,
+) {
+    const mutation = request.useModelMutation('Todo', 'PUT', 'update', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.TodoUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.TodoGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useUpdateManyTodo(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoUpdateManyArgs>) {
+    const mutation = request.useModelMutation('Todo', 'PUT', 'updateMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.TodoUpdateManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
+export function useUpsertTodo(
+    options?: MutationOptions<Prisma.TodoGetPayload<Prisma.TodoUpsertArgs> | undefined, unknown, Prisma.TodoUpsertArgs>,
+) {
+    const mutation = request.useModelMutation('Todo', 'POST', 'upsert', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.TodoUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.TodoGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteTodo(
+    options?: MutationOptions<Prisma.TodoGetPayload<Prisma.TodoDeleteArgs> | undefined, unknown, Prisma.TodoDeleteArgs>,
+) {
+    const mutation = request.useModelMutation('Todo', 'DELETE', 'delete', metadata, options, true);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.TodoDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.TodoGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteManyTodo(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoDeleteManyArgs>) {
+    const mutation = request.useModelMutation('Todo', 'DELETE', 'deleteMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger<T extends Prisma.TodoDeleteManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>) {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
 }
 
 export function useAggregateTodo<T extends Prisma.TodoAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.TodoAggregateArgs>,
-    options?: RequestOptions<Prisma.GetTodoAggregateType<T>>,
+    options?: QueryOptions<Prisma.GetTodoAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<Prisma.GetTodoAggregateType<T>>('Todo', 'aggregate', endpoint, args, options, fetch);
+    return request.useModelQuery('Todo', 'aggregate', args, options);
 }
 
 export function useGroupByTodo<
@@ -158,7 +271,7 @@ export function useGroupByTodo<
           }[OrderFields],
 >(
     args?: Prisma.SubsetIntersection<T, Prisma.TodoGroupByArgs, OrderByArg> & InputErrors,
-    options?: RequestOptions<
+    options?: QueryOptions<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
@@ -172,25 +285,12 @@ export function useGroupByTodo<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.TodoGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
-    >('Todo', 'groupBy', endpoint, args, options, fetch);
+    return request.useModelQuery('Todo', 'groupBy', args, options);
 }
 
 export function useCountTodo<T extends Prisma.TodoCountArgs>(
     args?: Prisma.Subset<T, Prisma.TodoCountArgs>,
-    options?: RequestOptions<
+    options?: QueryOptions<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
@@ -198,12 +298,5 @@ export function useCountTodo<T extends Prisma.TodoCountArgs>(
             : number
     >,
 ) {
-    const { endpoint, fetch } = useHooksContext();
-    return request.useGet<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType>
-            : number
-    >('Todo', 'count', endpoint, args, options, fetch);
+    return request.useModelQuery('Todo', 'count', args, options);
 }
