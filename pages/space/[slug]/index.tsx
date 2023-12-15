@@ -43,7 +43,7 @@ function CreateDialog() {
     const onSubmit = (event: FormEvent) => {
         event.preventDefault();
 
-        createList({
+        void createList({
             data: {
                 title,
                 private: _private,

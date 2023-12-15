@@ -11,6 +11,7 @@ import {
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
+/** @deprecated Use mutation hooks (useCreateXXX, useUpdateXXX, etc.) instead. */
 export function useMutateTodo() {
     const { endpoint, fetch } = useHooksContext();
     const invalidate = request.useInvalidation('Todo', metadata);
@@ -113,7 +114,7 @@ export function useCreateTodo(
     const mutation = request.useModelMutation('Todo', 'POST', 'create', metadata, options, true);
     return {
         ...mutation,
-        trigger<T extends Prisma.TodoCreateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>) {
+        trigger: <T extends Prisma.TodoCreateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.TodoGetPayload<T> | undefined>;
         },
     };
@@ -123,7 +124,7 @@ export function useCreateManyTodo(options?: MutationOptions<Prisma.BatchPayload,
     const mutation = request.useModelMutation('Todo', 'POST', 'createMany', metadata, options, false);
     return {
         ...mutation,
-        trigger<T extends Prisma.TodoCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>) {
+        trigger: <T extends Prisma.TodoCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
         },
     };
@@ -163,7 +164,7 @@ export function useUpdateTodo(
     const mutation = request.useModelMutation('Todo', 'PUT', 'update', metadata, options, true);
     return {
         ...mutation,
-        trigger<T extends Prisma.TodoUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>) {
+        trigger: <T extends Prisma.TodoUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.TodoGetPayload<T> | undefined>;
         },
     };
@@ -173,7 +174,7 @@ export function useUpdateManyTodo(options?: MutationOptions<Prisma.BatchPayload,
     const mutation = request.useModelMutation('Todo', 'PUT', 'updateMany', metadata, options, false);
     return {
         ...mutation,
-        trigger<T extends Prisma.TodoUpdateManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>) {
+        trigger: <T extends Prisma.TodoUpdateManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
         },
     };
@@ -185,7 +186,7 @@ export function useUpsertTodo(
     const mutation = request.useModelMutation('Todo', 'POST', 'upsert', metadata, options, true);
     return {
         ...mutation,
-        trigger<T extends Prisma.TodoUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>) {
+        trigger: <T extends Prisma.TodoUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.TodoGetPayload<T> | undefined>;
         },
     };
@@ -197,7 +198,7 @@ export function useDeleteTodo(
     const mutation = request.useModelMutation('Todo', 'DELETE', 'delete', metadata, options, true);
     return {
         ...mutation,
-        trigger<T extends Prisma.TodoDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>) {
+        trigger: <T extends Prisma.TodoDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.TodoGetPayload<T> | undefined>;
         },
     };
@@ -207,7 +208,7 @@ export function useDeleteManyTodo(options?: MutationOptions<Prisma.BatchPayload,
     const mutation = request.useModelMutation('Todo', 'DELETE', 'deleteMany', metadata, options, false);
     return {
         ...mutation,
-        trigger<T extends Prisma.TodoDeleteManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>) {
+        trigger: <T extends Prisma.TodoDeleteManyArgs>(args: Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
         },
     };
@@ -235,40 +236,40 @@ export function useGroupByTodo<
     InputErrors extends ByEmpty extends Prisma.True
         ? `Error: "by" must not be empty.`
         : HavingValid extends Prisma.False
-        ? {
-              [P in HavingFields]: P extends ByFields
-                  ? never
-                  : P extends string
-                  ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                  : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`];
-          }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-        ? 'orderBy' extends Prisma.Keys<T>
-            ? ByValid extends Prisma.True
+          ? {
+                [P in HavingFields]: P extends ByFields
+                    ? never
+                    : P extends string
+                      ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+                      : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`];
+            }[HavingFields]
+          : 'take' extends Prisma.Keys<T>
+            ? 'orderBy' extends Prisma.Keys<T>
+                ? ByValid extends Prisma.True
+                    ? {}
+                    : {
+                          [P in OrderFields]: P extends ByFields
+                              ? never
+                              : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                      }[OrderFields]
+                : 'Error: If you provide "take", you also need to provide "orderBy"'
+            : 'skip' extends Prisma.Keys<T>
+              ? 'orderBy' extends Prisma.Keys<T>
+                  ? ByValid extends Prisma.True
+                      ? {}
+                      : {
+                            [P in OrderFields]: P extends ByFields
+                                ? never
+                                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                        }[OrderFields]
+                  : 'Error: If you provide "skip", you also need to provide "orderBy"'
+              : ByValid extends Prisma.True
                 ? {}
                 : {
                       [P in OrderFields]: P extends ByFields
                           ? never
                           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
-                  }[OrderFields]
-            : 'Error: If you provide "take", you also need to provide "orderBy"'
-        : 'skip' extends Prisma.Keys<T>
-        ? 'orderBy' extends Prisma.Keys<T>
-            ? ByValid extends Prisma.True
-                ? {}
-                : {
-                      [P in OrderFields]: P extends ByFields
-                          ? never
-                          : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
-                  }[OrderFields]
-            : 'Error: If you provide "skip", you also need to provide "orderBy"'
-        : ByValid extends Prisma.True
-        ? {}
-        : {
-              [P in OrderFields]: P extends ByFields
-                  ? never
-                  : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
-          }[OrderFields],
+                  }[OrderFields],
 >(
     args?: Prisma.SubsetIntersection<T, Prisma.TodoGroupByArgs, OrderByArg> & InputErrors,
     options?: QueryOptions<

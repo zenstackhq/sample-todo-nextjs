@@ -14,15 +14,15 @@ export default function TodoComponent({ value, optimistic }: Props) {
     const { trigger: updateTodo } = useUpdateTodo({ optimisticUpdate: true });
     const { trigger: deleteTodo } = useDeleteTodo({ optimisticUpdate: true });
 
-    const onDeleteTodo = async () => {
-        deleteTodo({ where: { id: value.id } });
+    const onDeleteTodo = () => {
+        void deleteTodo({ where: { id: value.id } });
     };
 
-    const toggleCompleted = async (completed: boolean) => {
+    const toggleCompleted = (completed: boolean) => {
         if (completed === !!value.completedAt) {
             return;
         }
-        updateTodo({
+        void updateTodo({
             where: { id: value.id },
             data: { completedAt: completed ? new Date() : null },
         });

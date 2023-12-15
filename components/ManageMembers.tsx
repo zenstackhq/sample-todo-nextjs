@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useCurrentUser } from '@lib/context';
 import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from '@lib/hooks';
@@ -47,6 +48,7 @@ export default function ManageMembers({ space }: Props) {
                 },
             });
             console.log('SpaceUser created:', r);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.error(err);
             if (err.info?.prisma === true) {
@@ -65,7 +67,7 @@ export default function ManageMembers({ space }: Props) {
 
     const removeMember = (id: string) => {
         if (confirm(`Are you sure to remove this member from space?`)) {
-            deleteSpaceUser({ where: { id } });
+            void deleteSpaceUser({ where: { id } });
         }
     };
 
@@ -82,7 +84,7 @@ export default function ManageMembers({ space }: Props) {
                     }}
                     onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
                         if (e.key === 'Enter') {
-                            inviteUser();
+                            void inviteUser();
                         }
                     }}
                 />
@@ -98,7 +100,7 @@ export default function ManageMembers({ space }: Props) {
                     <option value={SpaceUserRole.ADMIN}>ADMIN</option>
                 </select>
 
-                <button onClick={() => inviteUser()}>
+                <button onClick={() => void inviteUser()}>
                     <PlusIcon className="w-6 h-6 text-gray-500" />
                 </button>
             </div>

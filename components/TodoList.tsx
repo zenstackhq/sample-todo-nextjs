@@ -21,7 +21,7 @@ export default function TodoList({ value }: Props) {
 
     const onDeleteList = () => {
         if (confirm('Are you sure to delete this list?')) {
-            deleteList({ where: { id: value.id } });
+            void deleteList({ where: { id: value.id } });
         }
     };
 

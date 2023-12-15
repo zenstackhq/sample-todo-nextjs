@@ -1,4 +1,5 @@
-import { useMutateUser } from '@lib/hooks';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { useCreateUser } from '@lib/hooks';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,12 +9,13 @@ import { toast } from 'react-toastify';
 export default function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { createUser } = useMutateUser();
+    const { trigger: createUser } = useCreateUser();
 
     async function onSignup(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         try {
             await createUser({ data: { email, password } });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.error(err);
             if (err.info?.prisma === true) {
@@ -51,7 +53,7 @@ export default function Signup() {
             <div className="items-center justify-center w-full bg-white rounded-lg shadow lg:flex md:mt-0 lg:max-w-screen-md xl:p-0">
                 <div className="w-full p-6 space-y-8 sm:p-8 lg:p-16">
                     <h2 className="text-2xl font-bold text-gray-900 lg:text-3xl">Create a Free Account</h2>
-                    <form className="mt-8" action="#" onSubmit={(e) => onSignup(e)}>
+                    <form className="mt-8" action="#" onSubmit={(e) => void onSignup(e)}>
                         <div className="mb-6">
                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
                                 Your email

@@ -11,6 +11,7 @@ import {
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
+/** @deprecated Use mutation hooks (useCreateXXX, useUpdateXXX, etc.) instead. */
 export function useMutateSpaceUser() {
     const { endpoint, fetch } = useHooksContext();
     const invalidate = request.useInvalidation('SpaceUser', metadata);
@@ -133,7 +134,7 @@ export function useCreateSpaceUser(
     const mutation = request.useModelMutation('SpaceUser', 'POST', 'create', metadata, options, true);
     return {
         ...mutation,
-        trigger<T extends Prisma.SpaceUserCreateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserCreateArgs>) {
+        trigger: <T extends Prisma.SpaceUserCreateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserCreateArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.SpaceUserGetPayload<T> | undefined>;
         },
     };
@@ -145,9 +146,9 @@ export function useCreateManySpaceUser(
     const mutation = request.useModelMutation('SpaceUser', 'POST', 'createMany', metadata, options, false);
     return {
         ...mutation,
-        trigger<T extends Prisma.SpaceUserCreateManyArgs>(
+        trigger: <T extends Prisma.SpaceUserCreateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.SpaceUserCreateManyArgs>,
-        ) {
+        ) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
         },
     };
@@ -194,7 +195,7 @@ export function useUpdateSpaceUser(
     const mutation = request.useModelMutation('SpaceUser', 'PUT', 'update', metadata, options, true);
     return {
         ...mutation,
-        trigger<T extends Prisma.SpaceUserUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserUpdateArgs>) {
+        trigger: <T extends Prisma.SpaceUserUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserUpdateArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.SpaceUserGetPayload<T> | undefined>;
         },
     };
@@ -206,9 +207,9 @@ export function useUpdateManySpaceUser(
     const mutation = request.useModelMutation('SpaceUser', 'PUT', 'updateMany', metadata, options, false);
     return {
         ...mutation,
-        trigger<T extends Prisma.SpaceUserUpdateManyArgs>(
+        trigger: <T extends Prisma.SpaceUserUpdateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.SpaceUserUpdateManyArgs>,
-        ) {
+        ) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
         },
     };
@@ -224,7 +225,7 @@ export function useUpsertSpaceUser(
     const mutation = request.useModelMutation('SpaceUser', 'POST', 'upsert', metadata, options, true);
     return {
         ...mutation,
-        trigger<T extends Prisma.SpaceUserUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>) {
+        trigger: <T extends Prisma.SpaceUserUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.SpaceUserGetPayload<T> | undefined>;
         },
     };
@@ -240,7 +241,7 @@ export function useDeleteSpaceUser(
     const mutation = request.useModelMutation('SpaceUser', 'DELETE', 'delete', metadata, options, true);
     return {
         ...mutation,
-        trigger<T extends Prisma.SpaceUserDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserDeleteArgs>) {
+        trigger: <T extends Prisma.SpaceUserDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.SpaceUserDeleteArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.SpaceUserGetPayload<T> | undefined>;
         },
     };
@@ -252,9 +253,9 @@ export function useDeleteManySpaceUser(
     const mutation = request.useModelMutation('SpaceUser', 'DELETE', 'deleteMany', metadata, options, false);
     return {
         ...mutation,
-        trigger<T extends Prisma.SpaceUserDeleteManyArgs>(
+        trigger: <T extends Prisma.SpaceUserDeleteManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.SpaceUserDeleteManyArgs>,
-        ) {
+        ) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
         },
     };
@@ -282,40 +283,40 @@ export function useGroupBySpaceUser<
     InputErrors extends ByEmpty extends Prisma.True
         ? `Error: "by" must not be empty.`
         : HavingValid extends Prisma.False
-        ? {
-              [P in HavingFields]: P extends ByFields
-                  ? never
-                  : P extends string
-                  ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                  : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`];
-          }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-        ? 'orderBy' extends Prisma.Keys<T>
-            ? ByValid extends Prisma.True
+          ? {
+                [P in HavingFields]: P extends ByFields
+                    ? never
+                    : P extends string
+                      ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+                      : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`];
+            }[HavingFields]
+          : 'take' extends Prisma.Keys<T>
+            ? 'orderBy' extends Prisma.Keys<T>
+                ? ByValid extends Prisma.True
+                    ? {}
+                    : {
+                          [P in OrderFields]: P extends ByFields
+                              ? never
+                              : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                      }[OrderFields]
+                : 'Error: If you provide "take", you also need to provide "orderBy"'
+            : 'skip' extends Prisma.Keys<T>
+              ? 'orderBy' extends Prisma.Keys<T>
+                  ? ByValid extends Prisma.True
+                      ? {}
+                      : {
+                            [P in OrderFields]: P extends ByFields
+                                ? never
+                                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                        }[OrderFields]
+                  : 'Error: If you provide "skip", you also need to provide "orderBy"'
+              : ByValid extends Prisma.True
                 ? {}
                 : {
                       [P in OrderFields]: P extends ByFields
                           ? never
                           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
-                  }[OrderFields]
-            : 'Error: If you provide "take", you also need to provide "orderBy"'
-        : 'skip' extends Prisma.Keys<T>
-        ? 'orderBy' extends Prisma.Keys<T>
-            ? ByValid extends Prisma.True
-                ? {}
-                : {
-                      [P in OrderFields]: P extends ByFields
-                          ? never
-                          : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
-                  }[OrderFields]
-            : 'Error: If you provide "skip", you also need to provide "orderBy"'
-        : ByValid extends Prisma.True
-        ? {}
-        : {
-              [P in OrderFields]: P extends ByFields
-                  ? never
-                  : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
-          }[OrderFields],
+                  }[OrderFields],
 >(
     args?: Prisma.SubsetIntersection<T, Prisma.SpaceUserGroupByArgs, OrderByArg> & InputErrors,
     options?: QueryOptions<

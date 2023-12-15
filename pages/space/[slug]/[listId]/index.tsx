@@ -33,7 +33,7 @@ export default function TodoList(props: Props) {
     );
 
     const _createTodo = () => {
-        createTodo({
+        void createTodo({
             data: {
                 title,
                 owner: { connect: { id: user!.id } },
