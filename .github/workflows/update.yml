@@ -31,5 +31,5 @@ jobs:
             - name: Commit and push
               run: |
                   git add .
-                  git commit --allow-empty -m "chore: update to latest ZenStack" || true
+                  git commit -m "chore: update to latest ZenStack" || true
                   git push || true
