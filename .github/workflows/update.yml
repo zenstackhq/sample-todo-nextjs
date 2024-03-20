@@ -8,14 +8,12 @@ env:
 
 on:
     workflow_dispatch:
+    repository_dispatch:
+        types: [zenstack-release]
 
 jobs:
     update:
         runs-on: ubuntu-latest
-
-        strategy:
-            matrix:
-                node-version: [20.x]
 
         steps:
             - uses: actions/checkout@v3
