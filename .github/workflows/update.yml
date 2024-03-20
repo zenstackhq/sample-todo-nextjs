@@ -23,7 +23,7 @@ jobs:
               run: |
                   git config --global user.name ymc9
                   git config --global user.email yiming@whimslab.io
-                  npm run ci
+                  npm ci
                   npm run up
 
             - name: Build
