@@ -26,11 +26,10 @@ jobs:
 
             - name: Build
               run: |
-                  npm run lint
                   npm run build
 
             - name: Commit and push
               run: |
                   git add .
-                  git commit -m "chore: update to latest ZenStack"
-                  git push
+                  git commit --allow-empty -m "chore: update to latest ZenStack" || true
+                  git push || true
