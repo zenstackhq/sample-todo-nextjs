@@ -213,8 +213,10 @@ const metadata = {
                 }, ownerId: {
                     name: "ownerId",
                     type: "String",
+                    attributes: [{ "name": "@default", "args": [] }],
                     isForeignKey: true,
                     relationField: 'owner',
+                    defaultValueProvider: $default$List$ownerId,
                 }, title: {
                     name: "title",
                     type: "String",
@@ -264,8 +266,10 @@ const metadata = {
                 }, ownerId: {
                     name: "ownerId",
                     type: "String",
+                    attributes: [{ "name": "@default", "args": [] }],
                     isForeignKey: true,
                     relationField: 'owner',
+                    defaultValueProvider: $default$Todo$ownerId,
                 }, list: {
                     name: "list",
                     type: "List",
@@ -380,4 +384,11 @@ const metadata = {
     ,
     authModel: 'User'
 };
+function $default$List$ownerId(user: any): unknown {
+    return user?.id;
+}
+
+function $default$Todo$ownerId(user: any): unknown {
+    return user?.id;
+}
 export default metadata;

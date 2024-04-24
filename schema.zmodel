@@ -112,7 +112,7 @@ model List {
     space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
     spaceId   String
     owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId   String
+    ownerId   String   @default(auth().id)
     title     String   @length(1, 100)
     private   Boolean  @default(false)
     todos     Todo[]
@@ -142,7 +142,7 @@ model Todo {
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
     owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId     String
+    ownerId     String    @default(auth().id)
     list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
     listId      String
     title       String    @length(1, 100)

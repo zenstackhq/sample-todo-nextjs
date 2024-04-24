@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from ".zenstack/models";
 import { type GetNextArgs, type QueryOptions, type InfiniteQueryOptions, type MutationOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';

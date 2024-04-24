@@ -1,4 +1,4 @@
-import { SpaceContext, UserContext } from '@lib/context';
+import { SpaceContext } from '@lib/context';
 import { useCreateList, useFindManyList } from '@lib/hooks';
 import { List, Space, User } from '@prisma/client';
 import BreadCrumb from 'components/BreadCrumb';
@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 import { getEnhancedPrisma } from 'server/enhanced-db';
 
 function CreateDialog() {
-    const user = useContext(UserContext);
     const space = useContext(SpaceContext);
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -48,7 +47,6 @@ function CreateDialog() {
                 title,
                 private: _private,
                 space: { connect: { id: space!.id } },
-                owner: { connect: { id: user!.id } },
             },
         });
     };
