@@ -133,7 +133,7 @@ export default function SpaceHome(props: Props) {
         },
         {
             disabled: !router.query.slug,
-            initialData: props.lists,
+            fallbackData: props.lists,
         }
     );
 
