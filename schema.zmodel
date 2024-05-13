@@ -11,6 +11,11 @@ generator js {
     provider = 'prisma-client-js'
 }
 
+plugin enhancer {
+    provider = '@core/enhancer'
+    generatePermissionChecker = true
+}
+
 plugin hooks {
     provider = '@zenstackhq/swr'
     output = 'lib/hooks'
