@@ -1,6 +1,7 @@
 /* eslint-disable */
 import type { Prisma } from "@zenstackhq/runtime/models";
 import { type GetNextArgs, type QueryOptions, type InfiniteQueryOptions, type MutationOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import type { PolicyCrudKind } from '@zenstackhq/runtime'
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
@@ -150,4 +151,8 @@ export function useGroupByTodo<T extends Prisma.TodoGroupByArgs, HasSelectOrTake
 
 export function useCountTodo<T extends Prisma.TodoCountArgs>(args?: Prisma.Subset<T, Prisma.TodoCountArgs>, options?: QueryOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType> : number>) {
     return request.useModelQuery('Todo', 'count', args, options);
+}
+
+export function useCheckTodo(args: { operation: PolicyCrudKind; where?: { id?: string; ownerId?: string; listId?: string; title?: string }; }, options?: QueryOptions<boolean>) {
+    return request.useModelQuery('Todo', 'check', args, options);
 }

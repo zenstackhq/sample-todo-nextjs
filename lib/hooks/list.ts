@@ -1,6 +1,7 @@
 /* eslint-disable */
 import type { Prisma } from "@zenstackhq/runtime/models";
 import { type GetNextArgs, type QueryOptions, type InfiniteQueryOptions, type MutationOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import type { PolicyCrudKind } from '@zenstackhq/runtime'
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
@@ -150,4 +151,8 @@ export function useGroupByList<T extends Prisma.ListGroupByArgs, HasSelectOrTake
 
 export function useCountList<T extends Prisma.ListCountArgs>(args?: Prisma.Subset<T, Prisma.ListCountArgs>, options?: QueryOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType> : number>) {
     return request.useModelQuery('List', 'count', args, options);
+}
+
+export function useCheckList(args: { operation: PolicyCrudKind; where?: { id?: string; spaceId?: string; ownerId?: string; title?: string; private?: boolean }; }, options?: QueryOptions<boolean>) {
+    return request.useModelQuery('List', 'check', args, options);
 }

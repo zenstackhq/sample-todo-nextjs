@@ -1,6 +1,7 @@
 /* eslint-disable */
 import type { Prisma } from "@zenstackhq/runtime/models";
 import { type GetNextArgs, type QueryOptions, type InfiniteQueryOptions, type MutationOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import type { PolicyCrudKind } from '@zenstackhq/runtime'
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
@@ -150,4 +151,8 @@ export function useGroupByAccount<T extends Prisma.AccountGroupByArgs, HasSelect
 
 export function useCountAccount<T extends Prisma.AccountCountArgs>(args?: Prisma.Subset<T, Prisma.AccountCountArgs>, options?: QueryOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.AccountCountAggregateOutputType> : number>) {
     return request.useModelQuery('Account', 'count', args, options);
+}
+
+export function useCheckAccount(args: { operation: PolicyCrudKind; where?: { id?: string; userId?: string; type?: string; provider?: string; providerAccountId?: string; refresh_token?: string; refresh_token_expires_in?: number; access_token?: string; expires_at?: number; token_type?: string; scope?: string; id_token?: string; session_state?: string }; }, options?: QueryOptions<boolean>) {
+    return request.useModelQuery('Account', 'check', args, options);
 }

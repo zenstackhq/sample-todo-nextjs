@@ -1,6 +1,7 @@
 /* eslint-disable */
 import type { Prisma } from "@zenstackhq/runtime/models";
 import { type GetNextArgs, type QueryOptions, type InfiniteQueryOptions, type MutationOptions, type PickEnumerable } from '@zenstackhq/swr/runtime';
+import type { PolicyCrudKind } from '@zenstackhq/runtime'
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
@@ -150,4 +151,8 @@ export function useGroupBySpace<T extends Prisma.SpaceGroupByArgs, HasSelectOrTa
 
 export function useCountSpace<T extends Prisma.SpaceCountArgs>(args?: Prisma.Subset<T, Prisma.SpaceCountArgs>, options?: QueryOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType> : number>) {
     return request.useModelQuery('Space', 'count', args, options);
+}
+
+export function useCheckSpace(args: { operation: PolicyCrudKind; where?: { id?: string; name?: string; slug?: string }; }, options?: QueryOptions<boolean>) {
+    return request.useModelQuery('Space', 'check', args, options);
 }
