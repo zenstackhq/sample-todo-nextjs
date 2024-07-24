@@ -4,7 +4,7 @@
 
 datasource db {
     provider = 'postgresql'
-    url = env('DATABASE_URL')
+    url       = env("DATABASE_URL")
 }
 
 generator js {
@@ -107,26 +107,18 @@ model User {
     @@allow('all', auth() == this)
 }
 
-/**
- * Model for a Todo list
- */
-model List {
+abstract model BaseEntity {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
     space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
     spaceId   String
     owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     ownerId   String   @default(auth().id)
-    title     String   @length(1, 100)
-    private   Boolean  @default(false)
-    todos     Todo[]
 
-    // require login
-    @@deny('all', auth() == null)
-
-    // can be read by owner or space members (only if not private) 
-    @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
+    // can be read by owner or space members 
+    @@allow('read', owner == auth() || (space.members?[user == auth()]))
 
     // when create, owner must be set to current user, and user must be in the space
     @@allow('create', owner == auth() && space.members?[user == auth()])
@@ -137,6 +129,18 @@ model List {
 
     // can be deleted by owner
     @@allow('delete', owner == auth())
+}
+
+/**
+ * Model for a Todo list
+ */
+model List extends BaseEntity {
+    title   String  @length(1, 100)
+    private Boolean @default(false)
+    todos   Todo[]
+
+    // can't be read by others if it's private
+    @@deny('read', private == true && owner != auth())
 }
 
 /**
@@ -155,9 +159,6 @@ model Todo {
 
     // full access if the parent list is readable
     @@allow('all', check(list, 'read'))
-    
-    // update cannot change owner
-    @@deny('update', future().owner != owner)
 }
 
 /**

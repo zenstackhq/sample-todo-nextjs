@@ -71,11 +71,11 @@ model User {
   accounts      Account[]
 }
 
-/// @@deny('all', auth() == null)
-/// @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
+/// @@allow('read', owner == auth() || space.members?[user == auth()])
 /// @@allow('create', owner == auth() && space.members?[user == auth()])
 /// @@allow('update', owner == auth() && space.members?[user == auth()] && future().owner == owner)
 /// @@allow('delete', owner == auth())
+/// @@deny('read', private == true && owner != auth())
 model List {
   id        String   @id() @default(uuid())
   createdAt DateTime @default(now())
@@ -91,7 +91,6 @@ model List {
 }
 
 /// @@allow('all', check(list, 'read'))
-/// @@deny('update', future().owner != owner)
 model Todo {
   id          String    @id() @default(uuid())
   createdAt   DateTime  @default(now())
