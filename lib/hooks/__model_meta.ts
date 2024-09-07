@@ -195,6 +195,7 @@ const metadata = {
                     name: "space",
                     type: "Space",
                     isDataModel: true,
+                    backLink: 'lists',
                     isRelationOwner: true,
                     foreignKeyMapping: { "id": "spaceId" },
                 }, spaceId: {
@@ -206,6 +207,7 @@ const metadata = {
                     name: "owner",
                     type: "User",
                     isDataModel: true,
+                    backLink: 'lists',
                     isRelationOwner: true,
                     foreignKeyMapping: { "id": "ownerId" },
                 }, ownerId: {
