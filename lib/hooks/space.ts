@@ -159,6 +159,6 @@ export function useCountSpace<T extends Prisma.SpaceCountArgs>(args?: Prisma.Sub
     return request.useModelQuery('Space', 'count', args, options);
 }
 
-export function useCheckSpace(args: { operation: PolicyCrudKind; where?: { id?: string; name?: string; slug?: string }; }, options?: QueryOptions<boolean>) {
+export function useCheckSpace(args: { operation: PolicyCrudKind; where?: { id?: string; ownerId?: string; name?: string; slug?: string }; }, options?: QueryOptions<boolean>) {
     return request.useModelQuery('Space', 'check', args, options);
 }

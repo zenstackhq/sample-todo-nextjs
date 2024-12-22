@@ -68,6 +68,7 @@ export const authOptions: NextAuthOptions = {
                 data: {
                     name: `${user.name || user.email}'s space`,
                     slug: nanoid(8),
+                    owner: { connect: { id: user.id } },
                     members: {
                         create: [
                             {
