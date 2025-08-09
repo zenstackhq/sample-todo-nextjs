@@ -144,13 +144,13 @@ export function useGroupBySpace<T extends Prisma.SpaceGroupByArgs, HasSelectOrTa
         : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
     }[OrderFields]>(args?: Prisma.SubsetIntersection<T, Prisma.SpaceGroupByArgs, OrderByArg> & InputErrors, options?: QueryOptions<{} extends InputErrors ?
         Array<PickEnumerable<Prisma.SpaceGroupByOutputType, T['by']> &
-            {
-                [P in ((keyof T) & (keyof Prisma.SpaceGroupByOutputType))]: P extends '_count'
-                ? T[P] extends boolean
-                ? number
-                : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
-                : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
-            }
+        {
+            [P in ((keyof T) & (keyof Prisma.SpaceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
+        }
         > : InputErrors>) {
     return request.useModelQuery('Space', 'groupBy', args, options);
 }

@@ -144,13 +144,13 @@ export function useGroupByTodo<T extends Prisma.TodoGroupByArgs, HasSelectOrTake
         : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
     }[OrderFields]>(args?: Prisma.SubsetIntersection<T, Prisma.TodoGroupByArgs, OrderByArg> & InputErrors, options?: QueryOptions<{} extends InputErrors ?
         Array<PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> &
-            {
-                [P in ((keyof T) & (keyof Prisma.TodoGroupByOutputType))]: P extends '_count'
-                ? T[P] extends boolean
-                ? number
-                : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>
-                : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>
-            }
+        {
+            [P in ((keyof T) & (keyof Prisma.TodoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>
+        }
         > : InputErrors>) {
     return request.useModelQuery('Todo', 'groupBy', args, options);
 }

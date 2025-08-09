@@ -144,13 +144,13 @@ export function useGroupByList<T extends Prisma.ListGroupByArgs, HasSelectOrTake
         : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
     }[OrderFields]>(args?: Prisma.SubsetIntersection<T, Prisma.ListGroupByArgs, OrderByArg> & InputErrors, options?: QueryOptions<{} extends InputErrors ?
         Array<PickEnumerable<Prisma.ListGroupByOutputType, T['by']> &
-            {
-                [P in ((keyof T) & (keyof Prisma.ListGroupByOutputType))]: P extends '_count'
-                ? T[P] extends boolean
-                ? number
-                : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
-                : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
-            }
+        {
+            [P in ((keyof T) & (keyof Prisma.ListGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
+        }
         > : InputErrors>) {
     return request.useModelQuery('List', 'groupBy', args, options);
 }

@@ -144,13 +144,13 @@ export function useGroupByUser<T extends Prisma.UserGroupByArgs, HasSelectOrTake
         : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
     }[OrderFields]>(args?: Prisma.SubsetIntersection<T, Prisma.UserGroupByArgs, OrderByArg> & InputErrors, options?: QueryOptions<{} extends InputErrors ?
         Array<PickEnumerable<Prisma.UserGroupByOutputType, T['by']> &
-            {
-                [P in ((keyof T) & (keyof Prisma.UserGroupByOutputType))]: P extends '_count'
-                ? T[P] extends boolean
-                ? number
-                : Prisma.GetScalarType<T[P], Prisma.UserGroupByOutputType[P]>
-                : Prisma.GetScalarType<T[P], Prisma.UserGroupByOutputType[P]>
-            }
+        {
+            [P in ((keyof T) & (keyof Prisma.UserGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], Prisma.UserGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], Prisma.UserGroupByOutputType[P]>
+        }
         > : InputErrors>) {
     return request.useModelQuery('User', 'groupBy', args, options);
 }

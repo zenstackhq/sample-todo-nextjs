@@ -144,13 +144,13 @@ export function useGroupByAccount<T extends Prisma.AccountGroupByArgs, HasSelect
         : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
     }[OrderFields]>(args?: Prisma.SubsetIntersection<T, Prisma.AccountGroupByArgs, OrderByArg> & InputErrors, options?: QueryOptions<{} extends InputErrors ?
         Array<PickEnumerable<Prisma.AccountGroupByOutputType, T['by']> &
-            {
-                [P in ((keyof T) & (keyof Prisma.AccountGroupByOutputType))]: P extends '_count'
-                ? T[P] extends boolean
-                ? number
-                : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>
-                : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>
-            }
+        {
+            [P in ((keyof T) & (keyof Prisma.AccountGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>
+            : Prisma.GetScalarType<T[P], Prisma.AccountGroupByOutputType[P]>
+        }
         > : InputErrors>) {
     return request.useModelQuery('Account', 'groupBy', args, options);
 }
